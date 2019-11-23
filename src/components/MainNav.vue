@@ -12,10 +12,10 @@
         </div>
         <div id="navbar-content" class="navbar-menu">
             <div class="navbar-start">
-                <a class="navbar-item">
+                <a ref="maps" class="navbar-item">
                     My Mind Maps
                 </a>
-                <a class="navbar-item">
+                <a ref="create" class="navbar-item">
                     Create a Mind Map
                 </a>
             </div>
@@ -36,10 +36,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 import { State, Mutation } from 'vuex-class';
 import IState from '../interfaces/IState';
 import { interactifyNav } from '@/utility';
+import Page from '../enums/page';
 
 @Component
 export default class MainNav extends Vue {
@@ -47,14 +48,28 @@ export default class MainNav extends Vue {
     public user!: string;
     @Mutation('logout')
     private logout!: () => void;
+    @Mutation('changePage')
+    private changePage!: (page: Page) => void;
 
     private mounted() {
         interactifyNav();
-        (this.$refs.logout as HTMLButtonElement).addEventListener('click', this.logout);
+        (this.$refs.logout as HTMLElement).addEventListener('click', this.logout);
+        (this.$refs.create as HTMLElement).addEventListener('click', this.switchToCreate);
+        (this.$refs.maps as HTMLElement).addEventListener('click', this.switchToMyMaps);
     }
 
     private beforeDestroyed() {
-        (this.$refs.logout as HTMLButtonElement).removeEventListener('click', this.logout);
+        (this.$refs.logout as HTMLElement).removeEventListener('click', this.logout);
+        (this.$refs.create as HTMLElement).removeEventListener('click', this.switchToCreate);
+        (this.$refs.maps as HTMLElement).removeEventListener('click', this.switchToMyMaps);
+    }
+
+    private switchToMyMaps() {
+        this.changePage(Page.MapList);
+    }
+
+    private switchToCreate() {
+        this.changePage(Page.Mapper);
     }
 }
 </script>
@@ -63,6 +78,7 @@ export default class MainNav extends Vue {
 @import '../styles/variables.scss';
 
 nav {
+    flex: 0 0 auto;
     img {
         -webkit-filter: drop-shadow(1px 1px 0 $text-color)
                 drop-shadow(-1px 1px 0 $text-color)

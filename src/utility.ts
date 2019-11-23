@@ -1,3 +1,5 @@
+import Page from './enums/page';
+
 export function isEmptyString (str: string) {
     return str === '' || str === null || str === undefined;
 }
@@ -24,5 +26,20 @@ export function interactifyNav() {
                 }
             });
         });
+    }
+}
+
+export function setDocumentTitle(title: string) {
+    document.title = `Mind Map - ${title}`;
+}
+
+export function getUserFriendlyPageName(page: Page): string {
+    switch(page) {
+        case Page.MapList:
+            return 'My Mind Maps';
+        case Page.Mapper:
+            return 'New Mind Map';
+        default:
+            return ''
     }
 }

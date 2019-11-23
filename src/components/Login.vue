@@ -35,8 +35,9 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { isEmptyString } from '../utility';
+import { isEmptyString, setDocumentTitle } from '../utility';
 import { Mutation } from 'vuex-class';
+import Page from '../enums/page';
 
 @Component
 export default class Login extends Vue {
@@ -45,11 +46,14 @@ export default class Login extends Vue {
 
     @Mutation('login')
     private login!: (username: string) => void;
+    @Mutation('changePage')
+    private changePage!: (page: Page) => void;
 
     private mounted () {
         (this.$refs.username as HTMLInputElement).addEventListener('keypress', this.handleEnterPresssed);
         (this.$refs.password as HTMLInputElement).addEventListener('keypress', this.handleEnterPresssed);
         (this.$refs.signin as HTMLButtonElement).addEventListener('click', this.validateAndLogin);
+        setDocumentTitle('Login');
     }
 
     private beforeDestroy() {
@@ -76,6 +80,7 @@ export default class Login extends Vue {
             window.setTimeout(() => {
                 singInButton.classList.remove('is-loading');
                 this.login(username);
+                this.changePage(Page.MapList);
             }, 750);
         }
     }
@@ -92,6 +97,9 @@ export default class Login extends Vue {
 <style scoped lang="scss">
 @import '../styles/variables.scss';
 
+.section {
+    flex: 1 1 auto;
+}
 .login {
     width: 400px;
     padding: 10px 15px;

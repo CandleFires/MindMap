@@ -30,12 +30,19 @@ export default class App extends Vue {
 @import './styles/variables.scss';
 @import '~bulma/bulma.sass';
 
+html, body {
+    height: 100%;
+    overflow: auto;
+}
+
 #app {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
+    display: flex;
+    height: 100%;
 
     .fade-enter-active, .fade-leave-active {
         transition: opacity .25s;

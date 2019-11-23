@@ -26,7 +26,7 @@
             </div>
             <div class="field is-grouped is-grouped-centered">
                 <p class="control is-centered">
-                    <button ref="signin" class="button is-success">Sign In</button>
+                    <button ref="signin" type="submit" class="button is-success">Sign In</button>
                 </p>
             </div>
         </div>
@@ -39,7 +39,7 @@ import { isEmptyString } from '../utility';
 import { Mutation } from 'vuex-class';
 
 @Component
-export default class HelloWorld extends Vue {
+export default class Login extends Vue {
     public usernameNeeded: boolean = false;
     public passwordNeeded: boolean = false;
 
@@ -47,30 +47,44 @@ export default class HelloWorld extends Vue {
     private login!: (username: string) => void;
 
     private mounted () {
-      (this.$refs.signin as HTMLButtonElement).addEventListener('click', this.validateAndLogin);
+        (this.$refs.username as HTMLInputElement).addEventListener('keypress', this.handleEnterPresssed);
+        (this.$refs.password as HTMLInputElement).addEventListener('keypress', this.handleEnterPresssed);
+        (this.$refs.signin as HTMLButtonElement).addEventListener('click', this.validateAndLogin);
     }
 
-    private validateAndLogin () {
-      const username = (this.$refs.username as HTMLInputElement).value;
-      const password = (this.$refs.password as HTMLInputElement).value;
+    private beforeDestroy() {
+        (this.$refs.username as HTMLInputElement).removeEventListener('keypress', this.handleEnterPresssed);
+        (this.$refs.password as HTMLInputElement).removeEventListener('keypress', this.handleEnterPresssed);
+        (this.$refs.signin as HTMLButtonElement).removeEventListener('click', this.validateAndLogin);
+    }
 
-      if (this.validateInput(username, password)) {
-        const singInButton = this.$refs.signin as HTMLButtonElement;
+    private handleEnterPresssed(event: KeyboardEvent) {
+        if (event.key === "Enter") {
+            this.validateAndLogin();
+        }
+    }
 
-        singInButton.classList.add('is-loading');
-        // TODO: login request to server
-        window.setTimeout(() => {
-          singInButton.classList.remove('is-loading');
-          this.login(username);
-        }, 750);
-      }
+    private validateAndLogin() {
+        const username = (this.$refs.username as HTMLInputElement).value;
+        const password = (this.$refs.password as HTMLInputElement).value;
+
+        if (this.validateInput(username, password)) {
+            const singInButton = this.$refs.signin as HTMLButtonElement;
+
+            singInButton.classList.add('is-loading');
+            // TODO: login request to server
+            window.setTimeout(() => {
+                singInButton.classList.remove('is-loading');
+                this.login(username);
+            }, 750);
+        }
     }
 
     private validateInput (username: string, password: string): boolean {
-      this.usernameNeeded = isEmptyString(username);
-      this.passwordNeeded = isEmptyString(password);
+        this.usernameNeeded = isEmptyString(username);
+        this.passwordNeeded = isEmptyString(password);
 
-      return !(this.usernameNeeded || this.passwordNeeded);
+        return !(this.usernameNeeded || this.passwordNeeded);
     }
 }
 </script>

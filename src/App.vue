@@ -2,7 +2,7 @@
     <div id="app">
         <transition name="fade" mode="out-in">
             <Login v-if="!loggedIn" key="login"></Login>
-            <HelloWorld v-else key="application"></HelloWorld>
+            <Application v-else key="application"></Application>
         </transition>
     </div>
 </template>
@@ -10,13 +10,13 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
-import HelloWorld from './components/HelloWorld.vue';
+import Application from './components/Application.vue';
 import Login from './components/Login.vue';
 import IState from './interfaces/IState';
 
 @Component({
   components: {
-    HelloWorld,
+    Application,
     Login
   }
 })
@@ -27,6 +27,7 @@ export default class App extends Vue {
 </script>
 
 <style lang="scss">
+@import './styles/variables.scss';
 @import '~bulma/bulma.sass';
 
 #app {
@@ -35,7 +36,6 @@ export default class App extends Vue {
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
-    margin-top: 60px;
 
     .fade-enter-active, .fade-leave-active {
         transition: opacity .25s;

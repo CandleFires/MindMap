@@ -1,15 +1,18 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-  </div>
+    <div class="hello">
+        Hello {{ user }}
+    </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { State } from 'vuex-class';
+import IState from '../interfaces/IState';
 
 @Component
 export default class HelloWorld extends Vue {
-  @Prop() private msg!: string;
+    @State((state: IState) => state.user)
+    public user!: string;
 }
 </script>
 

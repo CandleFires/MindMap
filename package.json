@@ -8,22 +8,26 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "bulma": "^0.8.0",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",
-    "vue-property-decorator": "^8.1.0"
+    "vue-property-decorator": "^8.1.0",
+    "vuex": "^3.1.2",
+    "vuex-class": "^0.3.2"
   },
   "devDependencies": {
-    "@vue/cli-plugin-eslint": "^4.0.0",
-    "@vue/cli-plugin-typescript": "^4.0.0",
-    "@vue/cli-service": "^4.0.0",
+    "@fortawesome/fontawesome-free": "^5.11.2",
+    "@vue/cli-plugin-eslint": "^4.0.5",
+    "@vue/cli-plugin-typescript": "^4.0.5",
+    "@vue/cli-service": "^4.0.5",
     "@vue/eslint-config-standard": "^4.0.0",
     "@vue/eslint-config-typescript": "^4.0.0",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
-    "lint-staged": "^9.4.2",
-    "sass": "^1.19.0",
+    "lint-staged": "^9.4.3",
+    "sass": "^1.23.7",
     "sass-loader": "^8.0.0",
-    "typescript": "~3.5.3",
+    "typescript": "^3.7.2",
     "vue-template-compiler": "^2.6.10"
   },
   "eslintConfig": {
@@ -36,7 +40,10 @@
       "@vue/standard",
       "@vue/typescript"
     ],
-    "rules": {},
+    "rules": {
+        "semi": [2, "always"],
+        "vue/no-parsing-error": [2, { "x-invalid-end-tag": false }]
+    },
     "parserOptions": {
       "parser": "@typescript-eslint/parser"
     }
@@ -49,14 +56,5 @@
   "browserslist": [
     "> 1%",
     "last 2 versions"
-  ],
-  "gitHooks": {
-    "pre-commit": "lint-staged"
-  },
-  "lint-staged": {
-    "*.{js,vue,ts}": [
-      "vue-cli-service lint",
-      "git add"
-    ]
-  }
+  ]
 }

@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "bulma": "^0.8.0",
+    "paper": "^0.12.3",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",
     "vue-property-decorator": "^8.1.0",
@@ -41,8 +42,16 @@
       "@vue/typescript"
     ],
     "rules": {
-        "semi": [2, "always"],
-        "vue/no-parsing-error": [2, { "x-invalid-end-tag": false }]
+      "semi": [
+        2,
+        "always"
+      ],
+      "vue/no-parsing-error": [
+        2,
+        {
+          "x-invalid-end-tag": false
+        }
+      ]
     },
     "parserOptions": {
       "parser": "@typescript-eslint/parser"

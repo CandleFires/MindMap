@@ -39,7 +39,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { State, Mutation } from 'vuex-class';
 import IState from '../interfaces/IState';
-import { interactifyNav } from '@/utility';
+import { interactifyNav } from '../utility';
 import Page from '../enums/page';
 
 @Component

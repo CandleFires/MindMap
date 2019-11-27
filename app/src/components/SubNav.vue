@@ -30,7 +30,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { State, Mutation } from 'vuex-class';
 import IState from '../interfaces/IState';
-import { interactifyNav } from '@/utility';
+import { interactifyNav } from '../utility';
 
 @Component
 export default class SubNav extends Vue {

@@ -1,6 +1,6 @@
-import IState from '@/interfaces/IState';
-import Page from '@/enums/page';
-import { setDocumentTitle, getUserFriendlyPageName } from '@/utility';
+import IState from '../interfaces/IState';
+import Page from '../enums/page';
+import { setDocumentTitle, getUserFriendlyPageName } from '../utility';
 
 export default {
     login (state: IState, username: string) {

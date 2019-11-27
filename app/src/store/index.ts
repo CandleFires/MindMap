@@ -1,10 +1,10 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import IState from '@/interfaces/IState';
+import IState from '../interfaces/IState';
 import actions from './actions';
 import getters from './getters';
 import mutations from './mutations';
-import Page from '@/enums/page';
+import Page from '../enums/page';
 
 Vue.use(Vuex);
 

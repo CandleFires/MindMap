@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import { promises as fs } from 'fs';
 import IRouteExport from './interfaces/IRouteExport';
+import cors from 'cors';
 
 const port = normalizePort(process.env.PORT || '3000');
 
@@ -26,6 +27,8 @@ async function appSetup(app: express.Application) {
     app.use(cookieParser());
     app.use(express.static(path.resolve(__dirname, '../dist')));
     app.set('port', port);
+    // Only for dev
+    app.use(cors())
 }
 
 async function loadRoutes(app: express.Application) {

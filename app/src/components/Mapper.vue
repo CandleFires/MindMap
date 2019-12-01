@@ -12,7 +12,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import SubNav from './SubNav.vue';
 import IState from '../interfaces/IState';
-import paper, { Size, view } from 'paper';
+import paper, { Size } from 'paper';
 
 @Component({
     components: {
@@ -37,8 +37,8 @@ export default class Application extends Vue {
         let navbarsSize = 0;
         document.querySelectorAll('.navbar').forEach((navbar) => navbarsSize += navbar.clientHeight);
         const canvasHeight = window.innerHeight - navbarsSize;
-        view.viewSize!.width = window.outerWidth;
-        view.viewSize!.height = canvasHeight;
+        paper.view.viewSize!.width = window.outerWidth;
+        paper.view.viewSize!.height = canvasHeight;
     }
 }
 </script>

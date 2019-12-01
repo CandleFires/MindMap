@@ -1,22 +1,22 @@
 import { Router, NextFunction, Request, Response } from 'express';
 import IRouteExport from '../interfaces/IRouteExport';
 
-class IndexController {
+class ExampleController {
     public router: Router;
 
     constructor() {
         this.router = Router();
-        this.router.get('/', this.getIndex);
+        this.router.get('/', this.getEx);
     }
 
-    private getIndex = (req: Request, res: Response, next: NextFunction) => {
-        res.send('<p>Hello World</p>');
+    private getEx = (req: Request, res: Response, next: NextFunction) => {
+        res.send('Hello World');
     }
 }
 
 const exported: IRouteExport = {
-    path: '/',
-    router: new IndexController().router
+    path: '/example',
+    router: new ExampleController().router
 };
 
 export default exported;

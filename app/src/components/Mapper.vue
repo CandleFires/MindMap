@@ -24,7 +24,9 @@ export default class Application extends Vue {
     private canvas!: fabric.Canvas;
 
     private mounted() {
-        this.canvas = new fabric.Canvas(this.$refs.canvas as HTMLCanvasElement);
+        this.canvas = new fabric.Canvas(this.$refs.canvas as HTMLCanvasElement, {
+            preserveObjectStacking: true
+        });
         window.addEventListener('resize', this.resizeCavnas);
         this.resizeCavnas();
         this.loadMap();
@@ -39,10 +41,6 @@ export default class Application extends Vue {
             height: 120
         }).getGroup());
         this.canvas.renderAll();
-
-        this.canvas.on('object:moving', (e) => {
-            console.warn((e.target as fabric.Object).type);
-        });
     }
 
     private beforeDestroy() {

@@ -14,6 +14,7 @@ import { fabric } from 'fabric';
 import SubNav from './SubNav.vue';
 import IState from '../interfaces/IState';
 import Thought from '../models/thought';
+import AddButton from '../models/addButton';
 
 @Component({
     components: {
@@ -22,6 +23,7 @@ import Thought from '../models/thought';
 })
 export default class Application extends Vue {
     private canvas!: fabric.Canvas;
+    private thoughts: Array<Thought> = [];
 
     private mounted() {
         this.canvas = new fabric.Canvas(this.$refs.canvas as HTMLCanvasElement, {
@@ -34,12 +36,15 @@ export default class Application extends Vue {
 
     private loadMap() {
         const center = this.canvas.getCenter();
-        this.canvas.add(new Thought(this.canvas, {
+        const addButton = new AddButton(this.canvas, this.thoughts);
+        const newthought = new Thought(this.canvas, {
             x: center.left,
             y: center.top,
             width: 200,
             height: 120
-        }).getGroup());
+        });
+        this.thoughts.push(newthought);
+        this.canvas.add(newthought.getGroup());
         this.canvas.renderAll();
     }
 

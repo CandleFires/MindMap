@@ -1,0 +1,75 @@
+import { fabric } from 'fabric';
+import Thought from './thought';
+
+export default class AddButton {
+    private canvas: fabric.Canvas;
+    private thoughts: Array<Thought>;
+    private button: fabric.Group;
+
+    private readonly CLOSE_THRESHOLD: number = 250;
+    private readonly SHOW_THRESHOLD: number = 50;
+
+    constructor(canvas: fabric.Canvas, thoughts: Array<Thought>) {
+        this.canvas = canvas;
+        this.thoughts = thoughts;
+
+        const button = new fabric.Circle({
+            originX: 'center',
+            originY: 'center',
+            radius: 15,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 1
+        });
+        const verticalLine = new fabric.Rect({
+            originX: 'center',
+            originY: 'center',
+            width: 5,
+            height: 20,
+            fill: 'white'
+        });
+        const horizontalLine = new fabric.Rect({
+            originX: 'center',
+            originY: 'center',
+            width: 20,
+            height: 5,
+            fill: 'white'
+        });
+
+        this.button = new fabric.Group([
+            button,
+            verticalLine,
+            horizontalLine
+        ], {
+            originX: 'center',
+            originY: 'center',
+            left: -100,
+            top: -100
+        });
+
+        this.canvas.add(this.button);
+        this.canvas.on('mouse:move', this.onMouseMove);
+    }
+
+    public getButton = () => this.button;
+
+    private onMouseMove = (event: fabric.IEvent) => {
+        let closest: any = null;
+
+        this.thoughts.forEach((thought) => {
+            if (thought.getGroup().getCenterPoint().distanceFrom(event.absolutePointer!) <= this.CLOSE_THRESHOLD) {
+                const borderPoint = thought.getBorderPointAt(event.absolutePointer!);
+                const distance = borderPoint.distanceFrom(event.absolutePointer!);
+                if (distance <= this.SHOW_THRESHOLD && (closest === null || closest.distance > distance)) {
+                    closest = { point: borderPoint, distance };
+                }
+            }
+        });
+
+        this.button.top = closest ? closest.point.y : -100;
+        this.button.left = closest ? closest.point.x : -100;
+        this.canvas.bringToFront(this.button);
+        this.button.setCoords();
+        this.canvas.renderAll();
+    }
+}

@@ -10,9 +10,10 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
+import { fabric } from 'fabric';
 import SubNav from './SubNav.vue';
 import IState from '../interfaces/IState';
-import { fabric } from 'fabric';
+import Thought from '../models/thought';
 
 @Component({
     components: {
@@ -31,7 +32,12 @@ export default class Application extends Vue {
 
     private loadMap() {
         const center = this.canvas.getCenter();
-        this.canvas.add(this.bubbleAt(center.left, center.top, 200, 100));
+        this.canvas.add(new Thought(this.canvas, {
+            x: center.left,
+            y: center.top,
+            width: 200,
+            height: 120
+        }).getGroup());
         this.canvas.renderAll();
 
         this.canvas.on('object:moving', (e) => {
@@ -48,68 +54,6 @@ export default class Application extends Vue {
         this.canvas.setWidth(window.innerWidth);
         this.canvas.setHeight(container.clientHeight);
         this.canvas.calcOffset();
-    }
-
-    private bubbleAt(x: number, y: number, width: number, height: number): fabric.Group {
-        let ellipse = new fabric.Ellipse({
-            originX: 'center',
-            originY: 'center',
-            left: x,
-            top: y,
-            rx: width / 2,
-            ry: height / 2,
-            strokeWidth: 1,
-            stroke: '#55828b',
-            fill: '#fefefe',
-            hasControls: false
-        });
-        let text = new fabric.IText('New thought', {
-            originX: 'center',
-            originY: 'center',
-            left: x,
-            top: y,
-            fontFamily: 'Helvetica',
-            fontSize: 20
-        });
-
-        const createGroup = () => {
-            const group = new fabric.Group([ellipse, text], {
-                originX: 'center',
-                originY: 'center',
-                hasControls: false,
-                subTargetCheck: true
-            });
-
-            group.on('mousedblclick', (e) => {
-                group._restoreObjectsState();
-                this.canvas.remove(group);
-                this.canvas.renderAll();
-                this.canvas.add(ellipse);
-                this.canvas.add(text);
-                this.canvas.setActiveObject(text);
-                text.enterEditing();
-                text.selectAll();
-            });
-
-            return group;
-        }
-
-        text.on('editing:exited', () => {
-            this.canvas.remove(ellipse);
-            this.canvas.remove(text);
-            const group = createGroup();
-            this.canvas.add(group);
-            this.canvas.setActiveObject(group);
-        });
-
-        // Disables weird fabric.js bug with bubble movement.
-        ellipse.on('moving', () => {
-            ellipse.left = text.left;
-            ellipse.top = text.top;
-            this.canvas.discardActiveObject();
-        });
-
-        return createGroup();
     }
 
     private fabricDblClick(obj: any, handler: (obj: fabric.Object) => void) {

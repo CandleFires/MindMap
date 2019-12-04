@@ -87,7 +87,26 @@ export default class MapList extends Vue {
 </script>
 
 <style scoped lang="scss">
+
 section {
     flex: 1 1 auto;
+    .buttons .button {
+        margin-bottom: 0;
+    }
+    table.table {
+        tbody tr {
+            border: 1px solid #dbdbdb;
+            td, th {
+                border: 0;
+                height: 46px;
+                vertical-align: middle;
+            }
+        }
+        tfoot, thead {
+            td, th {
+                border: 0;
+            }
+        }
+    }
 }
 </style>

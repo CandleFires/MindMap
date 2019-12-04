@@ -1,6 +1,6 @@
 <template>
     <section>
-        Map List
+
     </section>
 </template>
 
@@ -8,9 +8,13 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import IState from '../interfaces/IState';
+import apiService from '../services/apiService';
 
 @Component
 export default class MapList extends Vue {
+    private mounted() {
+
+    }
 }
 </script>
 

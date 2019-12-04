@@ -1,22 +1,22 @@
 import { Router, NextFunction, Request, Response } from 'express';
 import IRouteExport from '../interfaces/IRouteExport';
 
-class ExampleController {
+class MapController {
     public router: Router;
 
     constructor() {
         this.router = Router();
-        this.router.get('/', this.getEx);
+        this.router.get('/', this.getMaps);
     }
 
-    private getEx = (req: Request, res: Response, next: NextFunction) => {
-        res.send('Hello World');
+    private getMaps = (req: Request, res: Response, next: NextFunction) => {
+        res.json([]);
     }
 }
 
 const exported: IRouteExport = {
-    path: '/example',
-    router: new ExampleController().router
+    path: '/maps',
+    router: new MapController().router
 };
 
 export default exported;

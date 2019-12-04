@@ -4,4 +4,5 @@ export default interface IState {
     loggedIn: boolean;
     user: string;
     page: Page;
+    currentMapName: string;
 };

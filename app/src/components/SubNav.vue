@@ -2,18 +2,20 @@
     <header class="navbar is-light" role="navigation">
         <div class="navbar-menu">
             <div class="navbar-start">
-                <!-- Current opened mind map -->
+                <div class="navbar-item">
+                    <span class="">{{ mapName }}</span>
+                </div>
             </div>
             <div class="navbar-end">
                 <div class="navbar-item">
                     <div class="buttons are-small">
-                        <a ref="save" class="button is-success">
+                        <a ref="save" class="button is-success" :class="{ 'is-loading': saving }" @click="save">
                             <span class="icon is-small">
                                 <i class="fas fa-save"></i>
                             </span>
                             <span>Save</span>
                         </a>
-                        <a ref="share" class="button is-info">
+                        <a ref="share" class="button is-info" @click="share">
                             <span class="icon is-small">
                                 <i class="fas fa-share-square"></i>
                             </span>
@@ -27,33 +29,23 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Emit, Prop } from 'vue-property-decorator';
 import { State, Mutation } from 'vuex-class';
 import IState from '../interfaces/IState';
 import { interactifyNav } from '../utility';
 
 @Component
 export default class SubNav extends Vue {
-    @Mutation('logout')
-    private logout!: () => void;
+    @Prop()
+    private saving!: boolean;
+    @State((state: IState) => state.currentMapName)
+    private mapName!: string;
 
-    private mounted() {
-        (this.$refs.save as HTMLElement).addEventListener('click', this.save);
-        (this.$refs.share as HTMLElement).addEventListener('click', this.share);
-    }
+    @Emit()
+    private share() {}
 
-    private beforeDestroyed() {
-        (this.$refs.save as HTMLElement).removeEventListener('click', this.save);
-        (this.$refs.share as HTMLElement).removeEventListener('click', this.share);
-    }
-
-    private share() {
-        // Share map
-    }
-
-    private save() {
-        // Save map
-    }
+    @Emit()
+    private save() {}
 }
 </script>
 

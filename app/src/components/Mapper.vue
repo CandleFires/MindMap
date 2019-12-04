@@ -1,6 +1,6 @@
 <template>
     <div class="mapper-wrapper">
-        <SubNav></SubNav>
+        <SubNav :saving="saving" @save="saveMap"></SubNav>
         <section ref="mapper" class="mapper">
             <canvas ref="canvas" />
         </section>
@@ -26,6 +26,9 @@ export default class Application extends Vue {
     private canvas!: fabric.Canvas;
     private thoughts: Array<Thought> = [];
     private mainThought!: Thought;
+    private saving: boolean = false;
+    @State((state: IState) => state.currentMapName)
+    private mapName!: string;
 
     private mounted() {
         this.canvas = new fabric.Canvas(this.$refs.canvas as HTMLCanvasElement, {
@@ -36,6 +39,18 @@ export default class Application extends Vue {
         document.addEventListener('keydown', this.handleKeyDown);
         this.resizeCavnas();
         this.loadMap();
+    }
+
+    private saveMap() {
+        this.saving = true;
+        const serializedObject = {
+            name: this.mapName,
+            thoughts: this.thoughts.map((thought) => thought.serialize(this.mainThought.getGroup().getCenterPoint()))
+        }
+
+        console.warn(serializedObject);
+
+        setTimeout(() => this.saving = false, 800);
     }
 
     private loadMap() {

@@ -12,11 +12,11 @@
         </div>
         <div id="navbar-content" class="navbar-menu">
             <div class="navbar-start">
-                <a ref="maps" class="navbar-item">
+                <a ref="maps" class="navbar-item" :class="{ active: page === 'MapList' }">
                     My Mind Maps
                 </a>
-                <a ref="create" class="navbar-item">
-                    Create a Mind Map
+                <a ref="create" class="navbar-item" :class="{ active: page === 'Mapper' }">
+                    Map Editor
                 </a>
             </div>
             <div class="navbar-end">
@@ -46,6 +46,8 @@ import Page from '../enums/page';
 export default class MainNav extends Vue {
     @State((state: IState) => state.user)
     public user!: string;
+    @State((state: IState) => state.page)
+    public page!: Page;
     @Mutation('logout')
     private logout!: () => void;
     @Mutation('changePage')
@@ -98,6 +100,9 @@ nav {
     }
     .buttons {
         justify-content: center;
+    }
+    .navbar-item.active {
+        background-color: darken($color: $primary, $amount: 10);
     }
 }
 </style>

@@ -2,10 +2,12 @@ import { fabric } from 'fabric';
 import IThoughtOptions from '../interfaces/IThoughtOptions';
 import Connection from './connection';
 import ThoughtSize from '../enums/thoughtSize';
+import { getUUID } from '../utility';
 
 export default class Thought {
     public connections: Array<Connection>;
 
+    private id: string;
     private canvas: fabric.Canvas;
     private ellipse: fabric.Ellipse;
     private text: fabric.IText;
@@ -15,6 +17,7 @@ export default class Thought {
 
     constructor(canvas: fabric.Canvas, options: IThoughtOptions) {
         this.canvas = canvas;
+        this.id = getUUID();
         this.connections = [];
         this.moveCallbacks = [];
         this.size = options.size;
@@ -64,6 +67,7 @@ export default class Thought {
 
     public getGroup = () => this.group;
     public getSize = () => this.size;
+    public getId = () => this.id;
 
     public getBorderPointAt = (point: fabric.Point) => {
         const {x, y} = this.group.getCenterPoint();
@@ -82,6 +86,18 @@ export default class Thought {
         const callbackIndex = this.moveCallbacks.indexOf(callback);
         if (callbackIndex !== -1) {
             this.moveCallbacks.splice(callbackIndex, 1);
+        }
+    }
+
+    public serialize = (mainPoint: fabric.Point) => {
+        const centerPoint = this.group.getCenterPoint();
+        return {
+            id: this.id,
+            x: centerPoint.x - mainPoint.x,
+            y: centerPoint.y - mainPoint.y,
+            size: this.size,
+            text: this.text.text,
+            connections: this.connections.map((connection) => connection.getOtherId(this.id))
         }
     }
 

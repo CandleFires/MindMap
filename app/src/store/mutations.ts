@@ -22,5 +22,8 @@ export default {
     },
     saveMap (state: IState, map: IMap) {
         Vue.set(state.savedMaps, map.name, map);
+    },
+    deleteMap (state: IState, map: IMap) {
+        Vue.delete(state.savedMaps, map.name);
     }
 };

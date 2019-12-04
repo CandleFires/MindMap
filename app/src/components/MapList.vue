@@ -65,6 +65,8 @@ export default class MapList extends Vue {
     @State((state: IState) => state.savedMaps)
     private savedMaps!: IDictionary<IMap>;
     @Mutation
+    private deleteMap!: (map: IMap) => void;
+    @Mutation
     private changeMapName!: (mapName: string) => void;
     @Mutation
     private changePage!: (page: Page) => void;
@@ -74,11 +76,7 @@ export default class MapList extends Vue {
     }
 
     private shareMap(map: IMap) {
-
-    }
-
-    private deleteMap(map: IMap) {
-
+        // TODO: Share
     }
 
     private newMap(map: IMap) {

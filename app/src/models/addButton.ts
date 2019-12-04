@@ -5,6 +5,7 @@ export default class AddButton {
     private canvas: fabric.Canvas;
     private thoughts: Array<Thought>;
     private button: fabric.Group;
+    private hoveredThought: Thought | null = null;
 
     private readonly CLOSE_THRESHOLD: number = 250;
     private readonly SHOW_THRESHOLD: number = 50;
@@ -44,16 +45,18 @@ export default class AddButton {
             originX: 'center',
             originY: 'center',
             left: -100,
-            top: -100
+            top: -100,
+            selectable: false
         });
 
         this.canvas.add(this.button);
-        this.canvas.on('mouse:move', this.onMouseMove);
+        this.canvas.on('mouse:move', this.changeButtonPosition);
+        this.button.on('mouseup', this.createThought);
     }
 
     public getButton = () => this.button;
 
-    private onMouseMove = (event: fabric.IEvent) => {
+    private changeButtonPosition = (event: fabric.IEvent) => {
         let closest: any = null;
 
         this.thoughts.forEach((thought) => {
@@ -61,15 +64,37 @@ export default class AddButton {
                 const borderPoint = thought.getBorderPointAt(event.absolutePointer!);
                 const distance = borderPoint.distanceFrom(event.absolutePointer!);
                 if (distance <= this.SHOW_THRESHOLD && (closest === null || closest.distance > distance)) {
-                    closest = { point: borderPoint, distance };
+                    closest = { point: borderPoint, distance, thought };
                 }
             }
         });
 
+        this.hoveredThought = closest ? closest.thought : null;
         this.button.top = closest ? closest.point.y : -100;
         this.button.left = closest ? closest.point.x : -100;
         this.canvas.bringToFront(this.button);
         this.button.setCoords();
         this.canvas.renderAll();
+    }
+
+    private createThought = (event: fabric.IEvent) => {
+        if (this.hoveredThought) {
+            const {x: tx, y: ty} = this.hoveredThought.getGroup().getCenterPoint();
+            const {x: mx, y: my} = event.absolutePointer!;
+
+            const xdiff = mx - tx;
+            const ydiff = my - ty;
+
+            const newThought = new Thought(this.canvas, {
+                x: tx + (3 * xdiff),
+                y: ty + (3 * ydiff),
+                width: 200,
+                height: 120
+            });
+
+            this.thoughts.push(newThought);
+            this.canvas.add(newThought.getGroup());
+            this.hoveredThought.connectTo(newThought);
+        }
     }
 }

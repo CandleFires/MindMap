@@ -4,6 +4,7 @@ import Connection from './connection';
 
 export default class Thought {
     public connections: Array<Connection>;
+
     private canvas: fabric.Canvas;
     private ellipse: fabric.Ellipse;
     private text: fabric.IText;

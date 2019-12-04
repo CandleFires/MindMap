@@ -1,7 +1,8 @@
+import ThoughtSize from '../enums/thoughtSize';
+
 export default interface IThoughtOptions {
     x: number;
     y: number;
-    width: number;
-    height: number;
+    size: ThoughtSize;
     color?: string;
 }

@@ -1,5 +1,6 @@
 import { fabric } from 'fabric';
 import Thought from './thought';
+import { getSmallerThoughtSize } from '../utility';
 
 export default class AddButton {
     private canvas: fabric.Canvas;
@@ -95,8 +96,7 @@ export default class AddButton {
             const newThought = new Thought(this.canvas, {
                 x: tx + (3 * xdiff),
                 y: ty + (3 * ydiff),
-                width: 200,
-                height: 120
+                size: getSmallerThoughtSize(this.hoveredThought.getSize())
             });
 
             this.thoughts.push(newThought);

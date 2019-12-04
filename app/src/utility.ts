@@ -1,4 +1,5 @@
 import Page from './enums/page';
+import ThoughtSize from './enums/thoughtSize';
 
 export function isEmptyString (str: string) {
     return str === '' || str === null || str === undefined;
@@ -42,4 +43,8 @@ export function getUserFriendlyPageName(page: Page): string {
         default:
             return ''
     }
+}
+
+export function getSmallerThoughtSize(size: ThoughtSize): ThoughtSize {
+    return size === ThoughtSize.Tiny ? ThoughtSize.Tiny : size + 1;
 }

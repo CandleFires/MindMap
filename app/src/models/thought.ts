@@ -1,6 +1,7 @@
 import { fabric } from 'fabric';
 import IThoughtOptions from '../interfaces/IThoughtOptions';
 import Connection from './connection';
+import ThoughtSize from '../enums/thoughtSize';
 
 export default class Thought {
     public connections: Array<Connection>;
@@ -9,20 +10,24 @@ export default class Thought {
     private ellipse: fabric.Ellipse;
     private text: fabric.IText;
     private group: fabric.Group;
+    private size: ThoughtSize;
     private moveCallbacks: Array<() => void>;
 
     constructor(canvas: fabric.Canvas, options: IThoughtOptions) {
         this.canvas = canvas;
         this.connections = [];
         this.moveCallbacks = [];
+        this.size = options.size;
+
+        const size = this.getSizeParams(options.size);
 
         this.ellipse = new fabric.Ellipse({
             originX: 'center',
             originY: 'center',
             left: options.x,
             top: options.y,
-            rx: options.width / 2,
-            ry: options.height / 2,
+            rx: size.width / 2,
+            ry: size.height / 2,
             strokeWidth: 3,
             stroke: options.color || '#55828b',
             fill: '#fefefe',
@@ -37,7 +42,7 @@ export default class Thought {
             left: options.x,
             top: options.y,
             fontFamily: 'Helvetica',
-            fontSize: 20,
+            fontSize: size.fontSize,
             hasControls: false,
             selectable: false
         });
@@ -58,6 +63,7 @@ export default class Thought {
     }
 
     public getGroup = () => this.group;
+    public getSize = () => this.size;
 
     public getBorderPointAt = (point: fabric.Point) => {
         const {x, y} = this.group.getCenterPoint();
@@ -120,5 +126,24 @@ export default class Thought {
 
     private thoughtMoved = () => {
         this.moveCallbacks.forEach((callback) => callback());
+    }
+
+    private getSizeParams = (size: ThoughtSize): { width: number, height: number, fontSize: number } => {
+        switch (size) {
+            case ThoughtSize.Main:
+                return { width: 200, height: 100, fontSize: 20 };
+            case ThoughtSize.Huge:
+                return { width: 180, height: 90, fontSize: 18 };
+            case ThoughtSize.Large:
+                return { width: 160, height: 80, fontSize: 16 };
+            case ThoughtSize.Medium:
+                return { width: 140, height: 70, fontSize: 14 };
+            case ThoughtSize.Small:
+                return { width: 120, height: 60, fontSize: 12 };
+            case ThoughtSize.Tiny:
+                return { width: 100, height: 50, fontSize: 10 };
+            default:
+                return { width: 0, height: 0, fontSize: 0 };
+        }
     }
 }

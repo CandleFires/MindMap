@@ -15,6 +15,7 @@ import SubNav from './SubNav.vue';
 import IState from '../interfaces/IState';
 import Thought from '../models/thought';
 import AddButton from '../models/addButton';
+import ThoughtSize from '../enums/thoughtSize';
 
 @Component({
     components: {
@@ -41,8 +42,7 @@ export default class Application extends Vue {
         const newThought = new Thought(this.canvas, {
             x: center.left,
             y: center.top,
-            width: 200,
-            height: 120
+            size: ThoughtSize.Main
         });
         this.thoughts.push(newThought);
         this.canvas.add(newThought.getGroup());

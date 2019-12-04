@@ -27,7 +27,8 @@ export default class Application extends Vue {
 
     private mounted() {
         this.canvas = new fabric.Canvas(this.$refs.canvas as HTMLCanvasElement, {
-            preserveObjectStacking: true
+            preserveObjectStacking: true,
+            selection: false
         });
         window.addEventListener('resize', this.resizeCavnas);
         this.resizeCavnas();
@@ -43,16 +44,7 @@ export default class Application extends Vue {
             width: 200,
             height: 120
         });
-        // Test
-        const otherThought = new Thought(this.canvas, {
-            x: center.left + 300,
-            y: center.top + 200,
-            width: 200,
-            height: 120
-        });
         this.thoughts.push(newThought);
-        this.thoughts.push(otherThought);
-        newThought.connectTo(otherThought);
         this.canvas.add(newThought.getGroup());
         this.canvas.renderAll();
     }

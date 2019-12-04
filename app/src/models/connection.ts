@@ -17,6 +17,7 @@ export default class Connection {
         this.line = new fabric.Line([x1, y1, x2, y2], {
             stroke: 'black',
             strokeWidth: 3,
+            selectable: false,
             hasControls: false,
             hasBorders: false,
             centeredRotation: false,
@@ -30,7 +31,6 @@ export default class Connection {
     }
 
     private changeFirstPosition = () => {
-        console.warn('change 1st postition');
         const {x, y} = this.thought1.getGroup().getCenterPoint();
         this.line.set({
             x1: x,
@@ -40,7 +40,6 @@ export default class Connection {
     }
 
     private changeSecondPosition = () => {
-        console.warn('change 2nd postition');
         const {x, y} = this.thought2.getGroup().getCenterPoint();
         this.line.set({
             x2: x,

@@ -26,7 +26,8 @@ export default class Thought {
             strokeWidth: 3,
             stroke: options.color || '#55828b',
             fill: '#fefefe',
-            hasControls: false
+            hasControls: false,
+            selectable: false
         });
         this.ellipse.on('moving', this.preventEllipseMovement);
 
@@ -36,7 +37,9 @@ export default class Thought {
             left: options.x,
             top: options.y,
             fontFamily: 'Helvetica',
-            fontSize: 20
+            fontSize: 20,
+            hasControls: false,
+            selectable: false
         });
         this.text.on('editing:exited', this.onEditExit);
 

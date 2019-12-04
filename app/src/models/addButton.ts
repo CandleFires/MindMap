@@ -8,7 +8,7 @@ export default class AddButton {
     private hoveredThought: Thought | null = null;
 
     private readonly CLOSE_THRESHOLD: number = 250;
-    private readonly SHOW_THRESHOLD: number = 50;
+    private readonly SHOW_THRESHOLD: number = 30;
 
     constructor(canvas: fabric.Canvas, thoughts: Array<Thought>) {
         this.canvas = canvas;
@@ -20,21 +20,27 @@ export default class AddButton {
             radius: 15,
             fill: 'green',
             stroke: 'black',
-            strokeWidth: 1
+            strokeWidth: 1,
+            hasControls: false,
+            selectable: false
         });
         const verticalLine = new fabric.Rect({
             originX: 'center',
             originY: 'center',
             width: 5,
             height: 20,
-            fill: 'white'
+            fill: 'white',
+            hasControls: false,
+            selectable: false
         });
         const horizontalLine = new fabric.Rect({
             originX: 'center',
             originY: 'center',
             width: 20,
             height: 5,
-            fill: 'white'
+            fill: 'white',
+            hasControls: false,
+            selectable: false
         });
 
         this.button = new fabric.Group([
@@ -46,6 +52,7 @@ export default class AddButton {
             originY: 'center',
             left: -100,
             top: -100,
+            hasControls: false,
             selectable: false
         });
 
@@ -70,8 +77,8 @@ export default class AddButton {
         });
 
         this.hoveredThought = closest ? closest.thought : null;
-        this.button.top = closest ? closest.point.y : -100;
-        this.button.left = closest ? closest.point.x : -100;
+        this.button.top = closest ? event.absolutePointer!.y : -100;
+        this.button.left = closest ? event.absolutePointer!.x : -100;
         this.canvas.bringToFront(this.button);
         this.button.setCoords();
         this.canvas.renderAll();

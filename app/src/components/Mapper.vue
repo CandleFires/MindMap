@@ -25,6 +25,7 @@ import ThoughtSize from '../enums/thoughtSize';
 export default class Application extends Vue {
     private canvas!: fabric.Canvas;
     private thoughts: Array<Thought> = [];
+    private mainThought!: Thought;
 
     private mounted() {
         this.canvas = new fabric.Canvas(this.$refs.canvas as HTMLCanvasElement, {
@@ -32,6 +33,7 @@ export default class Application extends Vue {
             selection: false
         });
         window.addEventListener('resize', this.resizeCavnas);
+        document.addEventListener('keydown', this.handleKeyDown);
         this.resizeCavnas();
         this.loadMap();
     }
@@ -39,13 +41,13 @@ export default class Application extends Vue {
     private loadMap() {
         const center = this.canvas.getCenter();
         const addButton = new AddButton(this.canvas, this.thoughts);
-        const newThought = new Thought(this.canvas, {
+        this.mainThought = new Thought(this.canvas, {
             x: center.left,
             y: center.top,
             size: ThoughtSize.Main
         });
-        this.thoughts.push(newThought);
-        this.canvas.add(newThought.getGroup());
+        this.thoughts.push(this.mainThought);
+        this.canvas.add(this.mainThought.getGroup());
         this.canvas.renderAll();
     }
 
@@ -79,6 +81,21 @@ export default class Application extends Vue {
         this.canvas.renderAll();
         for (var i = 0; i < items.length; i++) {
             this.canvas.add(items[i]);
+        }
+    }
+
+    private handleKeyDown(event: KeyboardEvent) {
+        if (event.key === 'Delete' || event.key === 'Backspace') {
+            const activeObject = this.canvas.getActiveObject();
+            if (activeObject && activeObject.type === 'group') {
+                const thought = this.thoughts.find((th) => th.getGroup() === activeObject);
+                if (thought && thought !== this.mainThought) {
+                    this.thoughts.splice(this.thoughts.indexOf(thought), 1);
+                    thought.destroy();
+                    this.canvas.remove(activeObject);
+                    this.canvas.discardActiveObject().renderAll();
+                }
+            }
         }
     }
 }

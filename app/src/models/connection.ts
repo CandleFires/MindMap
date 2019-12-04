@@ -30,6 +30,12 @@ export default class Connection {
         this.thought2.onThoughtMove(this.changeSecondPosition);
     }
 
+    public destroy = () => {
+        this.thought1.offThoughtMove(this.changeFirstPosition);
+        this.thought2.offThoughtMove(this.changeSecondPosition);
+        this.canvas.remove(this.line);
+    }
+
     private changeFirstPosition = () => {
         const {x, y} = this.thought1.getGroup().getCenterPoint();
         this.line.set({

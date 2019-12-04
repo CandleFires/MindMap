@@ -85,6 +85,14 @@ export default class Thought {
         }
     }
 
+    public destroy = () => {
+        this.canvas.remove(this.ellipse);
+        this.canvas.remove(this.text);
+        this.canvas.remove(this.group);
+        this.connections.forEach((connection) => connection.destroy());
+        this.moveCallbacks = [];
+    }
+
     private createGroup = () => {
         const group = new fabric.Group([this.ellipse, this.text], {
             originX: 'center',

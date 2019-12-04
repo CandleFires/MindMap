@@ -1,6 +1,6 @@
 import { fabric } from 'fabric';
 import Thought from './thought';
-import { getSmallerThoughtSize } from '../utility';
+import { getSmallerThoughtSize, getObjectZIndex } from '../utility';
 
 export default class AddButton {
     private canvas: fabric.Canvas;
@@ -66,13 +66,21 @@ export default class AddButton {
 
     private changeButtonPosition = (event: fabric.IEvent) => {
         let closest: any = null;
+        let topmostZ: number = -9001;
 
         this.thoughts.forEach((thought) => {
             if (thought.getGroup().getCenterPoint().distanceFrom(event.absolutePointer!) <= this.CLOSE_THRESHOLD) {
                 const borderPoint = thought.getBorderPointAt(event.absolutePointer!);
                 const distance = borderPoint.distanceFrom(event.absolutePointer!);
-                if (distance <= this.SHOW_THRESHOLD && (closest === null || closest.distance > distance)) {
-                    closest = { point: borderPoint, distance, thought };
+                const z = getObjectZIndex(this.canvas, thought.getGroup());
+                if (distance <= this.SHOW_THRESHOLD) {
+                    if (z > topmostZ) {
+                        closest = { distance, thought };
+                        topmostZ = z;
+                    }
+                } else if (closest !== null && thought.getGroup().containsPoint(event.absolutePointer!) && z > topmostZ) {
+                    closest = null;
+                    topmostZ = z;
                 }
             }
         });

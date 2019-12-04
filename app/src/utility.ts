@@ -48,3 +48,7 @@ export function getUserFriendlyPageName(page: Page): string {
 export function getSmallerThoughtSize(size: ThoughtSize): ThoughtSize {
     return size === ThoughtSize.Tiny ? ThoughtSize.Tiny : size + 1;
 }
+
+export function getObjectZIndex(canvas: fabric.Canvas, object: fabric.Object) {
+    return canvas.getObjects().indexOf(object);
+}

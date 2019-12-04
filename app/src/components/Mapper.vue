@@ -37,14 +37,23 @@ export default class Application extends Vue {
     private loadMap() {
         const center = this.canvas.getCenter();
         const addButton = new AddButton(this.canvas, this.thoughts);
-        const newthought = new Thought(this.canvas, {
+        const newThought = new Thought(this.canvas, {
             x: center.left,
             y: center.top,
             width: 200,
             height: 120
         });
-        this.thoughts.push(newthought);
-        this.canvas.add(newthought.getGroup());
+        // Test
+        const otherThought = new Thought(this.canvas, {
+            x: center.left + 300,
+            y: center.top + 200,
+            width: 200,
+            height: 120
+        });
+        this.thoughts.push(newThought);
+        this.thoughts.push(otherThought);
+        newThought.connectTo(otherThought);
+        this.canvas.add(newThought.getGroup());
         this.canvas.renderAll();
     }
 

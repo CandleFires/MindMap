@@ -1,14 +1,19 @@
 import { fabric } from 'fabric';
 import IThoughtOptions from '../interfaces/IThoughtOptions';
+import Connection from './connection';
 
 export default class Thought {
+    public connections: Array<Connection>;
     private canvas: fabric.Canvas;
     private ellipse: fabric.Ellipse;
     private text: fabric.IText;
     private group: fabric.Group;
+    private moveCallbacks: Array<() => void>;
 
     constructor(canvas: fabric.Canvas, options: IThoughtOptions) {
         this.canvas = canvas;
+        this.connections = [];
+        this.moveCallbacks = [];
 
         this.ellipse = new fabric.Ellipse({
             originX: 'center',
@@ -38,6 +43,16 @@ export default class Thought {
         this.canvas.add(this.group);
     }
 
+    public connectTo = (otherThought: Thought) => {
+        const connection = new Connection(this.canvas, this, otherThought);
+        this.addConnection(connection);
+        otherThought.addConnection(connection);
+    }
+
+    public addConnection = (connection: Connection) => {
+        this.connections.push(connection);
+    }
+
     public getGroup = () => this.group;
 
     public getBorderPointAt = (point: fabric.Point) => {
@@ -49,6 +64,17 @@ export default class Thought {
         return new fabric.Point(epx, epy);
     }
 
+    public onThoughtMove = (callback: () => void) => {
+        this.moveCallbacks.push(callback);
+    }
+
+    public offThoughtMove = (callback: () => void) => {
+        const callbackIndex = this.moveCallbacks.indexOf(callback);
+        if (callbackIndex !== -1) {
+            this.moveCallbacks.splice(callbackIndex, 1);
+        }
+    }
+
     private createGroup = () => {
         const group = new fabric.Group([this.ellipse, this.text], {
             originX: 'center',
@@ -57,12 +83,13 @@ export default class Thought {
             subTargetCheck: true
         });
 
-        group.on('mousedblclick', this.onGroupDoubleClick);
+        group.on('mousedblclick', this.editThoughtText);
+        group.on('moving', this.thoughtMoved);
 
         return group;
     }
 
-    private onGroupDoubleClick = () => {
+    private editThoughtText = () => {
         this.group._restoreObjectsState();
         this.canvas.remove(this.group);
         this.canvas.renderAll();
@@ -85,5 +112,9 @@ export default class Thought {
         this.ellipse.left = this.text.left;
         this.ellipse.top = this.text.top;
         this.canvas.discardActiveObject();
+    }
+
+    private thoughtMoved = () => {
+        this.moveCallbacks.forEach((callback) => callback());
     }
 }

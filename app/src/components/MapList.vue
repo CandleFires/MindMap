@@ -11,7 +11,7 @@
                 <tr>
                     <th></th>
                     <th class="buttons are-small is-right">
-                        <a ref="save" class="button is-primary" @click="newMap(map)">
+                        <a ref="save" class="button is-primary" @click="newMap">
                             <span class="icon is-small">
                                 <i class="fas fa-plus"></i>
                             </span>
@@ -53,16 +53,21 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import { State, Mutation } from 'vuex-class';
 import IState from '../interfaces/IState';
 import apiService from '../services/apiService';
 import IDictionary from '../interfaces/IDictionary';
 import IMap from '../interfaces/IMap';
+import Page from '../enums/page';
 
 @Component
 export default class MapList extends Vue {
     @State((state: IState) => state.savedMaps)
     private savedMaps!: IDictionary<IMap>;
+    @Mutation
+    private changeMapName!: (mapName: string) => void;
+    @Mutation
+    private changePage!: (page: Page) => void;
 
     private loadMap(map: IMap) {
 
@@ -74,6 +79,11 @@ export default class MapList extends Vue {
 
     private deleteMap(map: IMap) {
 
+    }
+
+    private newMap(map: IMap) {
+        this.changeMapName('');
+        this.changePage(Page.Mapper);
     }
 }
 </script>

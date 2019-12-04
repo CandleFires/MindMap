@@ -3,7 +3,8 @@
         <div class="navbar-menu">
             <div class="navbar-start">
                 <div class="navbar-item">
-                    <span class="">{{ mapName }}</span>
+                    <span v-if="mapName">{{ mapName }}</span>
+                    <span v-else><em>New Map</em></span>
                 </div>
             </div>
             <div class="navbar-end">

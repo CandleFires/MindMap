@@ -53,6 +53,7 @@ export default class Application extends Vue {
 
     private beforeDestroy() {
         window.removeEventListener('resize', this.resizeCavnas);
+        document.removeEventListener('keydown', this.handleKeyDown);
     }
 
     private resizeCavnas() {

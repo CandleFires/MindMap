@@ -12,7 +12,8 @@ const state: IState = {
     loggedIn: false,
     user: '',
     page: Page.MapList,
-    currentMapName: 'New Mind Map'
+    currentMapName: '',
+    savedMaps: {}
 };
 
 export default new Vuex.Store({

@@ -1,6 +1,6 @@
 <template>
     <div class="mapper-wrapper">
-        <SubNav :saving="saving" @save="saveMap"></SubNav>
+        <SubNav :saving="saving" @save="save"></SubNav>
         <section ref="mapper" class="mapper">
             <canvas ref="canvas" />
         </section>
@@ -9,13 +9,14 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import { State, Mutation } from 'vuex-class';
 import { fabric } from 'fabric';
 import SubNav from './SubNav.vue';
 import IState from '../interfaces/IState';
 import Thought from '../models/thought';
 import AddButton from '../models/addButton';
 import ThoughtSize from '../enums/thoughtSize';
+import IMap from '../interfaces/IMap';
 
 @Component({
     components: {
@@ -29,6 +30,10 @@ export default class Application extends Vue {
     private saving: boolean = false;
     @State((state: IState) => state.currentMapName)
     private mapName!: string;
+    @Mutation
+    private changeMapName!: (mapName: string) => void;
+    @Mutation
+    private saveMap!: (map: IMap) => void;
 
     private mounted() {
         this.canvas = new fabric.Canvas(this.$refs.canvas as HTMLCanvasElement, {
@@ -41,19 +46,31 @@ export default class Application extends Vue {
         this.loadMap();
     }
 
-    private saveMap() {
+    private save() {
         this.saving = true;
-        const serializedObject = {
+        if (!this.mapName) {
+            const newName = window.prompt('New Mind Map Name');
+            this.changeMapName(newName || '');
+        }
+        const serializedMap: IMap = {
             name: this.mapName,
             thoughts: this.thoughts.map((thought) => thought.serialize(this.mainThought.getGroup().getCenterPoint()))
         }
 
-        console.warn(serializedObject);
+        this.saveMap(serializedMap);
 
         setTimeout(() => this.saving = false, 800);
     }
 
     private loadMap() {
+        if (!this.mapName) {
+            this.createEmptyMap();
+        } else {
+            // Load map
+        }
+    }
+
+    private createEmptyMap() {
         const center = this.canvas.getCenter();
         const addButton = new AddButton(this.canvas, this.thoughts);
         this.mainThought = new Thought(this.canvas, {

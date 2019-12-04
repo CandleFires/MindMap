@@ -3,6 +3,7 @@ import IThoughtOptions from '../interfaces/IThoughtOptions';
 import Connection from './connection';
 import ThoughtSize from '../enums/thoughtSize';
 import { getUUID } from '../utility';
+import IThought from '../interfaces/IThought';
 
 export default class Thought {
     public connections: Array<Connection>;
@@ -89,14 +90,14 @@ export default class Thought {
         }
     }
 
-    public serialize = (mainPoint: fabric.Point) => {
+    public serialize = (mainPoint: fabric.Point): IThought => {
         const centerPoint = this.group.getCenterPoint();
         return {
             id: this.id,
             x: centerPoint.x - mainPoint.x,
             y: centerPoint.y - mainPoint.y,
             size: this.size,
-            text: this.text.text,
+            text: this.text.text || '',
             connections: this.connections.map((connection) => connection.getOtherId(this.id))
         }
     }

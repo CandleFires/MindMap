@@ -72,7 +72,8 @@ export default class MapList extends Vue {
     private changePage!: (page: Page) => void;
 
     private loadMap(map: IMap) {
-
+        this.changeMapName(map.name);
+        this.changePage(Page.Mapper);
     }
 
     private shareMap(map: IMap) {
@@ -105,6 +106,9 @@ section {
         tfoot, thead {
             td, th {
                 border: 0;
+                &.actions {
+                    text-align: right;
+                }
             }
         }
     }

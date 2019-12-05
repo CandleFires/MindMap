@@ -15,10 +15,11 @@ export default class Thought {
     private group: fabric.Group;
     private size: ThoughtSize;
     private moveCallbacks: Array<() => void>;
+    private editing: boolean = false;
 
     constructor(canvas: fabric.Canvas, options: IThoughtOptions) {
         this.canvas = canvas;
-        this.id = getUUID();
+        this.id = options.id || getUUID();
         this.connections = [];
         this.moveCallbacks = [];
         this.size = options.size;
@@ -40,7 +41,7 @@ export default class Thought {
         });
         this.ellipse.on('moving', this.preventEllipseMovement);
 
-        this.text = new fabric.IText('New thought', {
+        this.text = new fabric.IText(options.text || 'New thought', {
             originX: 'center',
             originY: 'center',
             left: options.x,
@@ -54,6 +55,8 @@ export default class Thought {
 
         this.group = this.createGroup();
         this.canvas.add(this.group);
+
+        document.addEventListener('keydown', this.handleKeyDown);
     }
 
     public connectTo = (otherThought: Thought) => {
@@ -103,6 +106,7 @@ export default class Thought {
     }
 
     public destroy = () => {
+        document.removeEventListener('keydown', this.handleKeyDown);
         this.canvas.remove(this.ellipse);
         this.canvas.remove(this.text);
         this.canvas.remove(this.group);
@@ -133,9 +137,11 @@ export default class Thought {
         this.canvas.setActiveObject(this.text);
         this.text.enterEditing();
         this.text.selectAll();
+        this.editing = true;
     }
 
     private onEditExit = () => {
+        this.editing = false;
         this.canvas.remove(this.ellipse);
         this.canvas.remove(this.text);
         this.group = this.createGroup();
@@ -169,6 +175,13 @@ export default class Thought {
                 return { width: 100, height: 50, fontSize: 10 };
             default:
                 return { width: 0, height: 0, fontSize: 0 };
+        }
+    }
+
+    private handleKeyDown = (event: KeyboardEvent) => {
+        if (event.key === 'Enter' && this.editing) {
+            event.preventDefault();
+            this.text.exitEditing();
         }
     }
 }

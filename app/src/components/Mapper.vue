@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { State, Mutation } from 'vuex-class';
+import { State, Mutation, Getter } from 'vuex-class';
 import { fabric } from 'fabric';
 import SubNav from './SubNav.vue';
 import IState from '../interfaces/IState';
@@ -30,6 +30,8 @@ export default class Application extends Vue {
     private saving: boolean = false;
     @State((state: IState) => state.currentMapName)
     private mapName!: string;
+    @Getter
+    private currentMap!: IMap;
     @Mutation
     private changeMapName!: (mapName: string) => void;
     @Mutation
@@ -66,7 +68,7 @@ export default class Application extends Vue {
         if (!this.mapName) {
             this.createEmptyMap();
         } else {
-            // Load map
+            this.createMapFromSave(this.currentMap);
         }
     }
 
@@ -83,6 +85,29 @@ export default class Application extends Vue {
         this.canvas.renderAll();
     }
 
+    private createMapFromSave(map: IMap) {
+        const center = this.canvas.getCenter();
+        map.thoughts.forEach((thought) => {
+            const newThought = new Thought(this.canvas, {
+                x: center.left + thought.x,
+                y: center.top + thought.y,
+                id: thought.id,
+                size: thought.size,
+                text: thought.text
+            });
+            this.thoughts.push(newThought);
+            if (newThought.getSize() === ThoughtSize.Main) {
+                this.mainThought = newThought;
+            }
+            thought.connections.forEach((connection) => {
+                const loadedThought = this.thoughts.find((th) => th.getId() === connection);
+                if (loadedThought) {
+                    newThought.connectTo(loadedThought);
+                }
+            });
+        });
+    }
+
     private beforeDestroy() {
         window.removeEventListener('resize', this.resizeCavnas);
         document.removeEventListener('keydown', this.handleKeyDown);
@@ -93,28 +118,6 @@ export default class Application extends Vue {
         this.canvas.setWidth(window.innerWidth);
         this.canvas.setHeight(container.clientHeight);
         this.canvas.calcOffset();
-    }
-
-    private fabricDblClick(obj: any, handler: (obj: fabric.Object) => void) {
-        return () => {
-            if (obj.clicked) handler(obj);
-            else {
-                obj.clicked = true;
-                setTimeout(function () {
-                    obj.clicked = false;
-                }, 500);
-            }
-        };
-    }
-
-    private ungroup(group: fabric.Group) {
-        const items = group._objects;
-        group._restoreObjectsState();
-        this.canvas.remove(group);
-        this.canvas.renderAll();
-        for (var i = 0; i < items.length; i++) {
-            this.canvas.add(items[i]);
-        }
     }
 
     private handleKeyDown(event: KeyboardEvent) {

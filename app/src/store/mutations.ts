@@ -25,5 +25,8 @@ export default {
     },
     deleteMap (state: IState, map: IMap) {
         Vue.delete(state.savedMaps, map.name);
+        if (state.currentMapName === map.name) {
+            state.currentMapName = '';
+        }
     }
 };

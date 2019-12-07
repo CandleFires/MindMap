@@ -70,11 +70,12 @@ export default class Application extends Vue {
         } else {
             this.createMapFromSave(this.currentMap);
         }
+        const addButton = new AddButton(this.canvas, this.thoughts);
+        this.canvas.renderAll();
     }
 
     private createEmptyMap() {
         const center = this.canvas.getCenter();
-        const addButton = new AddButton(this.canvas, this.thoughts);
         this.mainThought = new Thought(this.canvas, {
             x: center.left,
             y: center.top,
@@ -82,7 +83,6 @@ export default class Application extends Vue {
         });
         this.thoughts.push(this.mainThought);
         this.canvas.add(this.mainThought.getGroup());
-        this.canvas.renderAll();
     }
 
     private createMapFromSave(map: IMap) {

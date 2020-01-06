@@ -53,23 +53,30 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { State, Mutation } from 'vuex-class';
+import { State, Mutation, Action } from 'vuex-class';
 import IState from '../interfaces/IState';
 import apiService from '../services/apiService';
 import IDictionary from '../interfaces/IDictionary';
 import IMap from '../interfaces/IMap';
 import Page from '../enums/page';
+import Service from '../services/apiService';
 
 @Component
 export default class MapList extends Vue {
     @State((state: IState) => state.savedMaps)
     private savedMaps!: IDictionary<IMap>;
-    @Mutation
+    @Action
     private deleteMap!: (map: IMap) => void;
     @Mutation
     private changeMapName!: (mapName: string) => void;
     @Mutation
     private changePage!: (page: Page) => void;
+    @Action
+    private loadMaps!: () => Promise<void>;
+
+    private mounted() {
+        this.loadMaps();
+    }
 
     private loadMap(map: IMap) {
         this.changeMapName(map.name);

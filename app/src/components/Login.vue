@@ -38,6 +38,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import { isEmptyString, setDocumentTitle } from '../utility';
 import { Mutation } from 'vuex-class';
 import Page from '../enums/page';
+import Service from '../services/apiService';
 
 @Component
 export default class Login extends Vue {
@@ -45,7 +46,7 @@ export default class Login extends Vue {
     public passwordNeeded: boolean = false;
 
     @Mutation('login')
-    private login!: (username: string) => void;
+    private login!: (params: { username: string, token: string }) => void;
     @Mutation('changePage')
     private changePage!: (page: Page) => void;
 
@@ -68,7 +69,7 @@ export default class Login extends Vue {
         }
     }
 
-    private validateAndLogin() {
+    private async validateAndLogin() {
         const username = (this.$refs.username as HTMLInputElement).value;
         const password = (this.$refs.password as HTMLInputElement).value;
 
@@ -76,12 +77,12 @@ export default class Login extends Vue {
             const singInButton = this.$refs.signin as HTMLButtonElement;
 
             singInButton.classList.add('is-loading');
-            // TODO: login request to server
-            window.setTimeout(() => {
-                singInButton.classList.remove('is-loading');
-                this.login(username);
-                this.changePage(Page.MapList);
-            }, 750);
+            const response = await Service.post('/login', {
+                data: { username }
+            }, true);
+            singInButton.classList.remove('is-loading');
+            this.login({ username, token: response.data.token });
+            this.changePage(Page.MapList);
         }
     }
 

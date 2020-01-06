@@ -6,6 +6,7 @@ import logger from 'morgan';
 import { promises as fs } from 'fs';
 import IRouteExport from './interfaces/IRouteExport';
 import cors from 'cors';
+import Database from './database';
 
 const port = normalizePort(process.env.PORT || '3000');
 
@@ -13,6 +14,7 @@ async function main() {
     const app: express.Application = express();
     await appSetup(app);
     await loadRoutes(app);
+    await Database.initialize();
 
     const server = http.createServer(app);
     server.listen(port);

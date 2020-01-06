@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { State, Mutation, Getter } from 'vuex-class';
+import { State, Mutation, Getter, Action } from 'vuex-class';
 import { fabric } from 'fabric';
 import SubNav from './SubNav.vue';
 import IState from '../interfaces/IState';
@@ -34,7 +34,7 @@ export default class Application extends Vue {
     private currentMap!: IMap;
     @Mutation
     private changeMapName!: (mapName: string) => void;
-    @Mutation
+    @Action
     private saveMap!: (map: IMap) => void;
 
     private mounted() {
@@ -48,7 +48,7 @@ export default class Application extends Vue {
         this.loadMap();
     }
 
-    private save() {
+    private async save() {
         this.saving = true;
         if (!this.mapName) {
             const newName = window.prompt('New Mind Map Name');
@@ -59,9 +59,9 @@ export default class Application extends Vue {
             thoughts: this.thoughts.map((thought) => thought.serialize(this.mainThought.getGroup().getCenterPoint()))
         }
 
-        this.saveMap(serializedMap);
+        await this.saveMap(serializedMap);
 
-        setTimeout(() => this.saving = false, 800);
+        this.saving = false;
     }
 
     private loadMap() {

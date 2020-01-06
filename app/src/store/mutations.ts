@@ -5,9 +5,10 @@ import IMap from '../interfaces/IMap';
 import Vue from 'vue';
 
 export default {
-    login (state: IState, username: string) {
+    login (state: IState, params: { username: string, token: string }) {
         state.loggedIn = true;
-        state.user = username;
+        state.user = params.username;
+        state.token = params.token;
     },
     logout (state: IState) {
         state.loggedIn = false;
@@ -20,13 +21,10 @@ export default {
     changeMapName (state: IState, mapName: string) {
         state.currentMapName = mapName;
     },
-    saveMap (state: IState, map: IMap) {
-        Vue.set(state.savedMaps, map.name, map);
-    },
-    deleteMap (state: IState, map: IMap) {
-        Vue.delete(state.savedMaps, map.name);
-        if (state.currentMapName === map.name) {
-            state.currentMapName = '';
-        }
+    setMaps (state: IState, maps: Array<IMap>) {
+        Vue.set(state, 'savedMaps', {});
+        maps.forEach((map) => {
+            Vue.set(state.savedMaps, map.name, map);
+        });
     }
 };

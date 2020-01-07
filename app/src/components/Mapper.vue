@@ -11,6 +11,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { State, Mutation, Getter, Action } from 'vuex-class';
 import { fabric } from 'fabric';
+import { setDocumentTitle } from '../utility';
 import SubNav from './SubNav.vue';
 import IState from '../interfaces/IState';
 import Thought from '../models/thought';
@@ -28,6 +29,8 @@ export default class Application extends Vue {
     private thoughts: Array<Thought> = [];
     private mainThought!: Thought;
     private saving: boolean = false;
+    private panning: boolean = false;
+    private lastCursorPosition: fabric.Point | undefined;
     @State((state: IState) => state.currentMapName)
     private mapName!: string;
     @Getter
@@ -44,6 +47,9 @@ export default class Application extends Vue {
         });
         window.addEventListener('resize', this.resizeCavnas);
         document.addEventListener('keydown', this.handleKeyDown);
+        this.canvas.on('mouse:down', this.handleMouseDown);
+        this.canvas.on('mouse:up', this.handleMouseUp);
+        this.canvas.on('mouse:move', this.handleMouseMove);
         this.resizeCavnas();
         this.loadMap();
     }
@@ -67,8 +73,10 @@ export default class Application extends Vue {
     private loadMap() {
         if (!this.mapName) {
             this.createEmptyMap();
+            setDocumentTitle('New Mind Map');
         } else {
             this.createMapFromSave(this.currentMap);
+            setDocumentTitle(this.mapName);
         }
         const addButton = new AddButton(this.canvas, this.thoughts);
         this.canvas.renderAll();
@@ -132,6 +140,28 @@ export default class Application extends Vue {
                     this.canvas.discardActiveObject().renderAll();
                 }
             }
+        }
+    }
+
+    private handleMouseDown(event: fabric.IEvent) {
+        if (!event.target) {
+            this.panning = true;
+        }
+    }
+
+    private handleMouseUp(event: fabric.IEvent) {
+        this.panning = false;
+        delete this.lastCursorPosition;
+    }
+
+    private handleMouseMove(event: fabric.IEvent) {
+        if (this.panning) {
+            if (this.lastCursorPosition) {
+                const moveY = event.pointer!.y - this.lastCursorPosition!.y;
+                const moveX = event.pointer!.x - this.lastCursorPosition!.x;
+                this.thoughts.forEach((thought) => thought.moveBy(moveX, moveY));
+            }
+            this.lastCursorPosition = event.pointer;
         }
     }
 }

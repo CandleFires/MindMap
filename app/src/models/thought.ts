@@ -82,6 +82,13 @@ export default class Thought {
         return new fabric.Point(epx, epy);
     }
 
+    public moveBy(x: number, y: number) {
+        this.group.top! += y;
+        this.group.left! += x;
+        this.group.setCoords();
+        this.thoughtMoved();
+    }
+
     public onThoughtMove = (callback: () => void) => {
         this.moveCallbacks.push(callback);
     }

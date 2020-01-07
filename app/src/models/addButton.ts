@@ -59,7 +59,7 @@ export default class AddButton {
 
         this.canvas.add(this.button);
         this.canvas.on('mouse:move', this.changeButtonPosition);
-        this.button.on('mouseup', this.createThought);
+        this.button.on('mousedown', this.createThought);
     }
 
     public getButton = () => this.button;

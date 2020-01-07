@@ -52,6 +52,7 @@ export default class Application extends Vue {
         this.canvas.on('mouse:down', this.handleMouseDown);
         this.canvas.on('mouse:up', this.handleMouseUp);
         this.canvas.on('mouse:move', this.handleMouseMove);
+        this.canvas.on('mouse:wheel', this.handleMouseWheel);
         this.resizeCavnas();
         this.loadMap();
     }
@@ -175,6 +176,12 @@ export default class Application extends Vue {
                 this.thoughts.forEach((thought) => thought.moveBy(moveX, moveY));
             }
             this.lastCursorPosition = event.pointer;
+        }
+    }
+
+    private handleMouseWheel(event: fabric.IEvent) {
+        if ((event.e as MouseWheelEvent).deltaY) {
+            this.changeZoom((event.e as MouseWheelEvent).deltaY < 0);
         }
     }
 }

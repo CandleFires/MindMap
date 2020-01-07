@@ -21,7 +21,9 @@ export default class Connection {
             hasControls: false,
             hasBorders: false,
             centeredRotation: false,
-            centeredScaling: false
+            centeredScaling: false,
+            name: 'connection',
+            hoverCursor: 'default'
         });
         this.canvas.add(this.line);
         this.render();

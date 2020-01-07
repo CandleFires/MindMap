@@ -9,6 +9,18 @@
             </div>
             <div class="navbar-end">
                 <div class="navbar-item">
+                    <div class="buttons are-small has-addons">
+                        <a class="button" @click="zoomin">
+                            <span class="icon is-small">
+                                <i class="fas fa-search-plus"></i>
+                            </span>
+                        </a>
+                        <a class="button" @click="zoomout">
+                            <span class="icon is-small">
+                                <i class="fas fa-search-minus"></i>
+                            </span>
+                        </a>
+                    </div>
                     <div class="buttons are-small">
                         <a ref="save" class="button is-success" :class="{ 'is-loading': saving }" @click="save">
                             <span class="icon is-small">
@@ -47,6 +59,12 @@ export default class SubNav extends Vue {
 
     @Emit()
     private save() {}
+
+    @Emit()
+    private zoomin() {}
+
+    @Emit()
+    private zoomout() {}
 }
 </script>
 
@@ -56,6 +74,10 @@ header.navbar {
     flex: 0 0 auto;
     .navbar-item {
         padding: 0.25rem 0.75rem;
+        .buttons.has-addons {
+            margin-bottom: -0.5rem;
+            margin-right: 0.5rem;
+        }
     }
 }
 </style>

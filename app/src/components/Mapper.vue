@@ -1,6 +1,6 @@
 <template>
     <div class="mapper-wrapper">
-        <SubNav :saving="saving" @save="save"></SubNav>
+        <SubNav :saving="saving" @save="save" @zoomin="changeZoom(true)" @zoomout="changeZoom(false)"></SubNav>
         <section ref="mapper" class="mapper">
             <canvas ref="canvas" />
         </section>
@@ -31,6 +31,8 @@ export default class Application extends Vue {
     private saving: boolean = false;
     private panning: boolean = false;
     private lastCursorPosition: fabric.Point | undefined;
+    private zoomLevels = [0.1, 0.17, 0.25, 0.5, 0.7, 1, 1.5, 2.25, 3.15, 4.6, 6];
+    private zoomI = 5;
     @State((state: IState) => state.currentMapName)
     private mapName!: string;
     @Getter
@@ -68,6 +70,17 @@ export default class Application extends Vue {
         await this.saveMap(serializedMap);
 
         this.saving = false;
+    }
+
+    private changeZoom(zoomIn: boolean) {
+        this.zoomI += (zoomIn ? 1 : -1);
+        if (this.zoomI < 0) {
+            this.zoomI = 0;
+        } else if (this.zoomI >= this.zoomLevels.length) {
+            this.zoomI = this.zoomLevels.length - 1;
+        }
+        const center = this.canvas.getCenter();
+        this.canvas.zoomToPoint(new fabric.Point(center.left, center.top), this.zoomLevels[this.zoomI]);
     }
 
     private loadMap() {
@@ -144,7 +157,7 @@ export default class Application extends Vue {
     }
 
     private handleMouseDown(event: fabric.IEvent) {
-        if (!event.target) {
+        if (!event.target || event.target.name === 'connection') {
             this.panning = true;
         }
     }
@@ -157,8 +170,8 @@ export default class Application extends Vue {
     private handleMouseMove(event: fabric.IEvent) {
         if (this.panning) {
             if (this.lastCursorPosition) {
-                const moveY = event.pointer!.y - this.lastCursorPosition!.y;
-                const moveX = event.pointer!.x - this.lastCursorPosition!.x;
+                const moveY = (event.pointer!.y - this.lastCursorPosition!.y) / this.zoomLevels[this.zoomI];
+                const moveX = (event.pointer!.x - this.lastCursorPosition!.x) / this.zoomLevels[this.zoomI];
                 this.thoughts.forEach((thought) => thought.moveBy(moveX, moveY));
             }
             this.lastCursorPosition = event.pointer;

@@ -85,9 +85,18 @@ export default class AddButton {
             }
         });
 
-        this.hoveredThought = closest ? closest.thought : null;
-        this.button.top = closest ? event.absolutePointer!.y : -100;
-        this.button.left = closest ? event.absolutePointer!.x : -100;
+        if (closest) {
+            this.hoveredThought = closest.thought;
+            this.button.top = event.absolutePointer!.y;
+            this.button.left = event.absolutePointer!.x;
+            this.button.opacity = 1;
+            this.button.hoverCursor = 'pointer';
+        } else {
+            this.hoveredThought = null;
+            this.button.opacity = 0;
+            this.button.hoverCursor = 'default';
+        }
+
         this.canvas.bringToFront(this.button);
         this.button.setCoords();
         this.canvas.renderAll();

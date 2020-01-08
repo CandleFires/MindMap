@@ -16,6 +16,7 @@ import SubNav from './SubNav.vue';
 import IState from '../interfaces/IState';
 import Thought from '../models/thought';
 import AddButton from '../models/addButton';
+import ColorPicker from '../models/colorPicker';
 import ThoughtSize from '../enums/thoughtSize';
 import IMap from '../interfaces/IMap';
 
@@ -92,7 +93,8 @@ export default class Application extends Vue {
             this.createMapFromSave(this.currentMap);
             setDocumentTitle(this.mapName);
         }
-        const addButton = new AddButton(this.canvas, this.thoughts);
+        const colorPicker = new ColorPicker(this.canvas, this.thoughts);
+        const addButton = new AddButton(this.canvas, this.thoughts, colorPicker.getPicker());
         this.canvas.renderAll();
     }
 

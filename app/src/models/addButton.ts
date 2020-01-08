@@ -5,15 +5,17 @@ import { getSmallerThoughtSize, getObjectZIndex } from '../utility';
 export default class AddButton {
     private canvas: fabric.Canvas;
     private thoughts: Array<Thought>;
+    private picker: fabric.Group;
     private button: fabric.Group;
     private hoveredThought: Thought | null = null;
 
     private readonly CLOSE_THRESHOLD: number = 250;
     private readonly SHOW_THRESHOLD: number = 30;
 
-    constructor(canvas: fabric.Canvas, thoughts: Array<Thought>) {
+    constructor(canvas: fabric.Canvas, thoughts: Array<Thought>, picker: fabric.Group) {
         this.canvas = canvas;
         this.thoughts = thoughts;
+        this.picker = picker;
 
         const button = new fabric.Circle({
             originX: 'center',
@@ -65,6 +67,12 @@ export default class AddButton {
     public getButton = () => this.button;
 
     private changeButtonPosition = (event: fabric.IEvent) => {
+        if (this.picker.containsPoint(event.absolutePointer!)) {
+            this.hide();
+
+            return;
+        }
+
         let closest: any = null;
         let topmostZ: number = -9001;
 
@@ -91,13 +99,21 @@ export default class AddButton {
             this.button.left = event.absolutePointer!.x;
             this.button.opacity = 1;
             this.button.hoverCursor = 'pointer';
-        } else {
-            this.hoveredThought = null;
-            this.button.opacity = 0;
-            this.button.hoverCursor = 'default';
-        }
 
-        this.canvas.bringToFront(this.button);
+            this.canvas.bringToFront(this.button);
+            this.button.setCoords();
+            this.canvas.renderAll();
+        } else {
+            this.hide();
+        }
+    }
+
+    private hide() {
+        this.hoveredThought = null;
+        this.button.opacity = 0;
+        this.button.hoverCursor = 'default';
+
+        this.canvas.sendToBack(this.button);
         this.button.setCoords();
         this.canvas.renderAll();
     }
@@ -113,7 +129,8 @@ export default class AddButton {
             const newThought = new Thought(this.canvas, {
                 x: tx + (3 * xdiff),
                 y: ty + (3 * ydiff),
-                size: getSmallerThoughtSize(this.hoveredThought.getSize())
+                size: getSmallerThoughtSize(this.hoveredThought.getSize()),
+                color: this.hoveredThought.getColor()
             });
 
             this.thoughts.push(newThought);

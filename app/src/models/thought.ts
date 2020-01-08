@@ -34,7 +34,7 @@ export default class Thought {
             rx: size.width / 2,
             ry: size.height / 2,
             strokeWidth: 3,
-            stroke: options.color || '#55828b',
+            stroke: options.color || '#0074D9',
             fill: '#fefefe',
             hasControls: false,
             selectable: false
@@ -72,6 +72,7 @@ export default class Thought {
     public getGroup = () => this.group;
     public getSize = () => this.size;
     public getId = () => this.id;
+    public getColor = () => this.ellipse.stroke;
 
     public getBorderPointAt = (point: fabric.Point) => {
         const {x, y} = this.group.getCenterPoint();
@@ -80,6 +81,11 @@ export default class Thought {
         const epy = y + (this.ellipse.getRy() * -Math.sin(angle));
 
         return new fabric.Point(epx, epy);
+    }
+
+    public changeColor(color: string) {
+        this.ellipse.set('stroke', color);
+        this.canvas.renderAll();
     }
 
     public moveBy(x: number, y: number) {

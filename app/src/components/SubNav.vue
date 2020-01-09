@@ -40,6 +40,12 @@
                             </span>
                             <span>Save As Image</span>
                         </a>
+                        <a ref="share" class="button is-danger" @click="deleteThought">
+                            <span class="icon is-small">
+                                <i class="fas fa-ban"></i>
+                            </span>
+                            <span>Delete</span>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -65,6 +71,9 @@ export default class SubNav extends Vue {
 
     @Emit()
     private save() {}
+
+    @Emit()
+    private deleteThought() {}
 
     @Emit()
     private saveAsImage() {}

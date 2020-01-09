@@ -1,6 +1,6 @@
 <template>
     <div class="mapper-wrapper">
-        <SubNav :saving="saving" @save="save" @save-as-image="saveAsImage" @share="share" @zoomin="changeZoom(true)" @zoomout="changeZoom(false)"></SubNav>
+        <SubNav :saving="saving" @save="save" @delete-thought="deleteThought" @save-as-image="saveAsImage" @share="share" @zoomin="changeZoom(true)" @zoomout="changeZoom(false)"></SubNav>
         <section ref="mapper" class="mapper">
             <canvas ref="canvas" />
         </section>
@@ -73,6 +73,19 @@ export default class Application extends Vue {
         await this.saveMap(serializedMap);
 
         this.saving = false;
+    }
+
+    private deleteThought() {
+        const activeObject = this.canvas.getActiveObject();
+        if (activeObject && activeObject.type === 'group') {
+            const thought = this.thoughts.find((th) => th.getGroup() === activeObject);
+            if (thought && thought !== this.mainThought) {
+                this.thoughts.splice(this.thoughts.indexOf(thought), 1);
+                thought.destroy();
+                this.canvas.remove(activeObject);
+                this.canvas.discardActiveObject().renderAll();
+            }
+        }
     }
 
     private share() {

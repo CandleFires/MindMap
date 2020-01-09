@@ -184,16 +184,7 @@ export default class Application extends Vue {
 
     private handleKeyDown(event: KeyboardEvent) {
         if (event.key === 'Delete' || event.key === 'Backspace') {
-            const activeObject = this.canvas.getActiveObject();
-            if (activeObject && activeObject.type === 'group') {
-                const thought = this.thoughts.find((th) => th.getGroup() === activeObject);
-                if (thought && thought !== this.mainThought) {
-                    this.thoughts.splice(this.thoughts.indexOf(thought), 1);
-                    thought.destroy();
-                    this.canvas.remove(activeObject);
-                    this.canvas.discardActiveObject().renderAll();
-                }
-            }
+            this.deleteThought();
         }
     }
 

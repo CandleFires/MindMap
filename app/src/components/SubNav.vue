@@ -34,6 +34,12 @@
                             </span>
                             <span>Share</span>
                         </a>
+                        <a ref="share" class="button is-info" @click="saveAsImage">
+                            <span class="icon is-small">
+                                <i class="fas fa-share-square"></i>
+                            </span>
+                            <span>Save As Image</span>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -59,6 +65,9 @@ export default class SubNav extends Vue {
 
     @Emit()
     private save() {}
+
+    @Emit()
+    private saveAsImage() {}
 
     @Emit()
     private zoomin() {}

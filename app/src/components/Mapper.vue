@@ -1,6 +1,6 @@
 <template>
     <div class="mapper-wrapper">
-        <SubNav :saving="saving" @save="save" @zoomin="changeZoom(true)" @zoomout="changeZoom(false)"></SubNav>
+        <SubNav :saving="saving" @save="save" @save-as-image="saveAsImage" @share="share" @zoomin="changeZoom(true)" @zoomout="changeZoom(false)"></SubNav>
         <section ref="mapper" class="mapper">
             <canvas ref="canvas" />
         </section>
@@ -19,6 +19,7 @@ import AddButton from '../models/addButton';
 import ColorPicker from '../models/colorPicker';
 import ThoughtSize from '../enums/thoughtSize';
 import IMap from '../interfaces/IMap';
+import {saveAs} from "file-saver";
 
 @Component({
     components: {
@@ -67,11 +68,28 @@ export default class Application extends Vue {
         const serializedMap: IMap = {
             name: this.mapName,
             thoughts: this.thoughts.map((thought) => thought.serialize(this.mainThought.getGroup().getCenterPoint()))
-        }
+        };
 
         await this.saveMap(serializedMap);
 
         this.saving = false;
+    }
+
+    private share() {
+        const serializedMap: IMap = {
+            name: this.mapName,
+            thoughts: this.thoughts.map((thought) => thought.serialize(this.mainThought.getGroup().getCenterPoint()))
+        };
+        const json = JSON.stringify(serializedMap);
+        const blob = new Blob([json], { type: 'application/json' });
+        saveAs(blob, `${serializedMap.name}.json`);
+    }
+
+    private saveAsImage() {
+        const image = this.canvas.toDataURL({
+            format: 'png'
+        });
+        saveAs(image, `${this.mapName}.png`);
     }
 
     private changeZoom(zoomIn: boolean) {

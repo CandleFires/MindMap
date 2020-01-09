@@ -37,7 +37,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { State, Mutation } from 'vuex-class';
+import { State, Mutation, Action } from 'vuex-class';
 import IState from '../interfaces/IState';
 import { interactifyNav } from '../utility';
 import Page from '../enums/page';
@@ -50,7 +50,7 @@ export default class MainNav extends Vue {
     public page!: Page;
     @Mutation('logout')
     private logout!: () => void;
-    @Mutation('changePage')
+    @Action('changePage')
     private changePage!: (page: Page) => void;
 
     private mounted() {

@@ -37,10 +37,16 @@ export default class Application extends Vue {
     private zoomI = 5;
     @State((state: IState) => state.currentMapName)
     private mapName!: string;
+    @State((state: IState) => state.unsavedChanges)
+    private unsavedChanges!: string;
     @Getter
     private currentMap!: IMap;
     @Mutation
     private changeMapName!: (mapName: string) => void;
+    @Mutation
+    private isUnsaved!: () => void;
+    @Mutation
+    private isSaved!: () => void;
     @Action
     private saveMap!: (map: IMap) => void;
 
@@ -71,6 +77,7 @@ export default class Application extends Vue {
         };
 
         await this.saveMap(serializedMap);
+        this.isSaved();
 
         this.saving = false;
     }
@@ -180,6 +187,10 @@ export default class Application extends Vue {
     private handleMouseDown(event: fabric.IEvent) {
         if (!event.target || event.target.name === 'connection') {
             this.panning = true;
+        }
+        if (!this.unsavedChanges) {
+            this.isUnsaved();
+            console.warn(this.unsavedChanges);
         }
     }
 

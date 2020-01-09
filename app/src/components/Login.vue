@@ -36,7 +36,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { isEmptyString, setDocumentTitle } from '../utility';
-import { Mutation } from 'vuex-class';
+import { Mutation, Action } from 'vuex-class';
 import Page from '../enums/page';
 import Service from '../services/apiService';
 
@@ -47,7 +47,7 @@ export default class Login extends Vue {
 
     @Mutation('login')
     private login!: (params: { username: string, token: string }) => void;
-    @Mutation('changePage')
+    @Action('changePage')
     private changePage!: (page: Page) => void;
 
     private mounted () {

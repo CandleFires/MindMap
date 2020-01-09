@@ -5,6 +5,7 @@
                 <div class="navbar-item">
                     <span v-if="mapName">{{ mapName }}</span>
                     <span v-else><em>New Map</em></span>
+                    <span v-if="unsavedChanges">*</span>
                 </div>
             </div>
             <div class="navbar-end">
@@ -36,7 +37,7 @@
                         </a>
                         <a class="button is-info" @click="saveAsImage">
                             <span class="icon is-small">
-                                <i class="fas fa-share-square"></i>
+                                <i class="fas fa-image"></i>
                             </span>
                             <span>Save As Image</span>
                         </a>
@@ -59,6 +60,8 @@ export default class SubNav extends Vue {
     private saving!: boolean;
     @State((state: IState) => state.currentMapName)
     private mapName!: string;
+    @State((state: IState) => state.unsavedChanges)
+    private unsavedChanges!: string;
 
     @Emit()
     private share() {}

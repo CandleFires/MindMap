@@ -17,6 +17,7 @@ export default {
     },
     changePage (state: IState, page: Page) {
         state.page = page;
+        state.unsavedChanges = false;
         setDocumentTitle(getUserFriendlyPageName(page));
     },
     changeMapName (state: IState, mapName: string) {
@@ -32,7 +33,7 @@ export default {
         state.popup.cancellationText = popup.cancellationText;
         state.popup.confirmationText = popup.confirmationText;
         state.popup.text = popup.text;
-        state.popup.title = popup.text;
+        state.popup.title = popup.title;
         state.popup.shown = true;
     },
     hidePopup (state: IState) {
@@ -45,5 +46,11 @@ export default {
     },
     updatePopupStatus (state: IState, result: 'good' | 'bad') {
         state.popup.result = result;
+    },
+    isUnsaved (state: IState) {
+        state.unsavedChanges = true;
+    },
+    isSaved (state: IState) {
+        state.unsavedChanges = false;
     }
 };

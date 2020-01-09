@@ -10,8 +10,8 @@
                 <p>{{ text }}</p>
             </section>
             <footer class="modal-card-foot">
-                <button class="button is-success is-small" @click="ok">{{ confirmationText }}</button>
                 <button class="button is-small" @click="close">{{ cancellationText }}</button>
+                <button class="button is-success is-small" @click="ok">{{ confirmationText }}</button>
             </footer>
         </div>
     </div>

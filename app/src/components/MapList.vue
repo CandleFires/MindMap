@@ -70,7 +70,7 @@ export default class MapList extends Vue {
     private deleteMap!: (map: IMap) => void;
     @Mutation
     private changeMapName!: (mapName: string) => void;
-    @Mutation
+    @Action
     private changePage!: (page: Page) => void;
     @Action
     private loadMaps!: () => Promise<void>;

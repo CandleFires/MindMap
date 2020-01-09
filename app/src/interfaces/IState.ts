@@ -8,6 +8,7 @@ export default interface IState {
     user: string;
     token: string;
     page: Page;
+    unsavedChanges: boolean;
     currentMapName: string;
     savedMaps: IDictionary<IMap>;
     popup: IPopup;

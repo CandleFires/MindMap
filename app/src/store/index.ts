@@ -14,6 +14,7 @@ const state: IState = {
     token: '',
     page: Page.MapList,
     currentMapName: '',
+    unsavedChanges: false,
     savedMaps: {},
     popup: {
         shown: false,

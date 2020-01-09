@@ -60,6 +60,7 @@ import IDictionary from '../interfaces/IDictionary';
 import IMap from '../interfaces/IMap';
 import Page from '../enums/page';
 import Service from '../services/apiService';
+import { saveAs } from 'file-saver';
 
 @Component
 export default class MapList extends Vue {
@@ -83,8 +84,10 @@ export default class MapList extends Vue {
         this.changePage(Page.Mapper);
     }
 
-    private shareMap(map: IMap) {
-        // TODO: Share
+    private shareMap (map: IMap) {
+      const json = JSON.stringify(map);
+      const blob = new Blob([json], { type: 'application/json' });
+      saveAs(blob, `${map.name}.json`);
     }
 
     private newMap(map: IMap) {

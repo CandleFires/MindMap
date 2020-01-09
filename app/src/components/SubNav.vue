@@ -22,19 +22,19 @@
                         </a>
                     </div>
                     <div class="buttons are-small">
-                        <a ref="save" class="button is-success" :class="{ 'is-loading': saving }" @click="save">
+                        <a class="button is-success" :class="{ 'is-loading': saving }" @click="save">
                             <span class="icon is-small">
                                 <i class="fas fa-save"></i>
                             </span>
                             <span>Save</span>
                         </a>
-                        <a ref="share" class="button is-info" @click="share">
+                        <a class="button is-info" @click="share">
                             <span class="icon is-small">
                                 <i class="fas fa-share-square"></i>
                             </span>
                             <span>Share</span>
                         </a>
-                        <a ref="share" class="button is-info" @click="saveAsImage">
+                        <a class="button is-info" @click="saveAsImage">
                             <span class="icon is-small">
                                 <i class="fas fa-share-square"></i>
                             </span>

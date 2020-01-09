@@ -1,5 +1,8 @@
 import Page from './enums/page';
 import ThoughtSize from './enums/thoughtSize';
+import IPopup from './interfaces/IPopup';
+import store from './store';
+import IState from './interfaces/IState';
 
 const lut: Array<string> = [];
 for (let i = 0; i < 256; i++) {
@@ -68,4 +71,19 @@ export function getUUID(): string {
         + lut[d1>>16&0x0f|0x40] + lut[d1>>24&0xff] + '-'
         + lut[d2&0x3f|0x80] + lut[d2>>8&0xff] + '-'
         + lut[d2>>16&0xff] + lut[d2>>24&0xff] + lut[d3&0xff] + lut[d3>>8&0xff] + lut[d3>>16&0xff] + lut[d3>>24&0xff];
+}
+
+export async function showPopup(options: IPopup) {
+    return new Promise((resolve, reject) => {
+        store.commit('showPopup', options);
+        const unwatch = store.watch((state: IState) => state.popup.result, (value) => {
+            unwatch();
+            store.commit('hidePopup');
+            if (value === 'good') {
+                resolve();
+            } else {
+                reject();
+            }
+        });
+    });
 }

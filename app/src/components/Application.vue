@@ -4,6 +4,7 @@
         <transition name="component-fade" mode="out-in">
             <component :is="page"></component>
         </transition>
+        <Popup></Popup>
     </div>
 </template>
 
@@ -13,6 +14,7 @@ import { State } from 'vuex-class';
 import MainNav from './MainNav.vue';
 import Mapper from './Mapper.vue';
 import MapList from './MapList.vue';
+import Popup from './Popup.vue';
 import IState from '../interfaces/IState';
 import Page from '../enums/page';
 
@@ -20,7 +22,8 @@ import Page from '../enums/page';
     components: {
         MainNav,
         Mapper,
-        MapList
+        MapList,
+        Popup
     }
 })
 export default class Application extends Vue {

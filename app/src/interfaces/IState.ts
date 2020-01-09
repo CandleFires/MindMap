@@ -1,6 +1,7 @@
 import Page from '../enums/page';
 import IMap from './IMap';
 import IDictionary from './IDictionary';
+import IPopup from './IPopup';
 
 export default interface IState {
     loggedIn: boolean;
@@ -9,4 +10,5 @@ export default interface IState {
     page: Page;
     currentMapName: string;
     savedMaps: IDictionary<IMap>;
+    popup: IPopup;
 };

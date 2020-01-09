@@ -14,7 +14,15 @@ const state: IState = {
     token: '',
     page: Page.MapList,
     currentMapName: '',
-    savedMaps: {}
+    savedMaps: {},
+    popup: {
+        shown: false,
+        title: '',
+        text: '',
+        cancellationText: '',
+        confirmationText: '',
+        result: null
+    }
 };
 
 export default new Vuex.Store({

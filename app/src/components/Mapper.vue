@@ -1,6 +1,6 @@
 <template>
     <div class="mapper-wrapper">
-        <SubNav :saving="saving" name="name" @update-name="updateName" @save="save" @delete-thought="deleteThought" @save-as-image="saveAsImage" @share="share" @zoomin="changeZoom(true)" @zoomout="changeZoom(false)"></SubNav>
+        <SubNav :saving="saving" :changedName="changedName" name="name" @update-name="updateName" @save="save" @delete-thought="deleteThought" @save-as-image="saveAsImage" @share="share" @zoomin="changeZoom(true)" @zoomout="changeZoom(false)"></SubNav>
         <section ref="mapper" class="mapper">
             <canvas ref="canvas" />
         </section>
@@ -36,13 +36,13 @@ export default class Application extends Vue {
     private lastCursorPosition: fabric.Point | undefined;
     private zoomLevels = [0.1, 0.17, 0.25, 0.5, 0.7, 1, 1.5, 2.25, 3.15, 4.6, 6];
     private zoomI = 5;
+    private changedName: string | null = null;
     @State((state: IState) => state.currentMapName)
     private mapName!: string;
     @State((state: IState) => state.unsavedChanges)
     private unsavedChanges!: string;
     @State((state: IState) => state.savedMaps)
     private savedMaps!: IDictionary<IMap>;
-
     @Getter
     private currentMap!: IMap;
     @Mutation
@@ -53,6 +53,8 @@ export default class Application extends Vue {
     private isSaved!: () => void;
     @Action
     private saveMap!: (map: IMap) => void;
+    @Action
+    private deleteMap!: (map: IMap) => void;
 
     private mounted() {
         this.canvas = new fabric.Canvas(this.$refs.canvas as HTMLCanvasElement, {
@@ -71,26 +73,36 @@ export default class Application extends Vue {
 
     private async save() {
         this.saving = true;
-        if (!this.mapName) {
+        let oldName;
+        if (this.changedName) {
+            oldName = this.mapName;
+            this.changeMapName(this.changedName);
+        } else if (!this.mapName) {
             const newName = window.prompt('New Mind Map Name');
-            this.changeMapName(newName || '');
+            this.changeMapName(newName || 'New Mind Map');
         }
+        const existingMap = this.savedMaps[this.mapName];
         const serializedMap: IMap = {
+            id: existingMap ? existingMap.id : undefined,
             name: this.mapName,
             thoughts: this.thoughts.map((thought) => thought.serialize(this.mainThought.getGroup().getCenterPoint()))
         };
 
         await this.saveMap(serializedMap);
+        if (oldName) {
+            await this.deleteMap(this.savedMaps[oldName]);
+        }
+        this.changedName = null;
         this.isSaved();
 
         this.saving = false;
     }
 
     private updateName(newName: string) {
-        this.saving = true;
-        console.log('New name', newName);
-        // TODO rewriting this new name to the currently open map
-        this.saving = false;
+        if (newName !== this.mapName) {
+            this.changedName = newName;
+        }
+        this.isUnsaved();
     }
 
     private deleteThought() {

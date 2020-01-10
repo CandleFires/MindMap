@@ -3,20 +3,32 @@
         <div class="navbar-menu">
             <div class="navbar-start">
                 <div class="navbar-item">
-                    <div v-show = "this.nameEdit === false" class="navbar-item">
-                        <span @click = "updateEdit" v-if="mapName">{{ mapName }}</span>
-                        <span @click = "updateEdit" v-else><em>New Map</em></span>
+                    <div v-show="!this.nameEdit" class="navbar-item">
+                        <span @click="updateEdit">
+                            <span v-if="changedName">{{ changedName }}</span>
+                            <span v-else-if="mapName">{{ mapName }}</span>
+                            <span v-else><em>New Map</em></span>
+                        </span>
                         <span v-if="unsavedChanges">*</span>
                     </div>
-                </div>
-                <div class="field has-addons" v-show = "this.nameEdit == true">
-                    <div class="control">
-                        <input ref="name" class="input" type="text" placeholder="Enter New Name">
-                    </div>
+                    <div class="field has-addons" v-show="this.nameEdit">
                         <div class="control">
-                        <a class="button is-info" @click="updateName">
-                            Save
-                        </a>
+                            <input ref="name" class="input is-small" type="text" placeholder="Enter New Name" @keydown="updateNameEnter">
+                        </div>
+                        <div class="control">
+                            <a class="button is-success is-small" @click="updateName">
+                                <span class="icon is-small">
+                                    <i class="fas fa-check"></i>
+                                </span>
+                            </a>
+                        </div>
+                        <div class="control">
+                            <a class="button is-danger is-small" @click="cancelUpdate">
+                                <span class="icon is-small">
+                                    <i class="fas fa-times"></i>
+                                </span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -76,6 +88,8 @@ import { interactifyNav } from '../utility';
 export default class SubNav extends Vue {
     @Prop()
     private saving!: boolean;
+    @Prop()
+    private changedName!: string;
     @State((state: IState) => state.currentMapName)
     private mapName!: string;
     @State((state: IState) => state.unsavedChanges)
@@ -88,6 +102,9 @@ export default class SubNav extends Vue {
     @Emit()
     private updateEdit() {
         this.nameEdit = true;
+        const input = (this.$refs.name as HTMLInputElement);
+        input.value = this.changedName || this.mapName || 'New Map';
+        setTimeout(() => input.select(), 20);
     }
 
     @Emit()
@@ -98,6 +115,18 @@ export default class SubNav extends Vue {
         this.nameEdit = false;
         const name = (this.$refs.name as HTMLInputElement).value;
         return name;
+    }
+
+    private cancelUpdate() {
+        this.nameEdit = false;
+    }
+
+    private updateNameEnter(event: KeyboardEvent) {
+        if (event.key === 'Enter') {
+            this.updateName();
+        } else if (event.key === 'Escape') {
+            this.cancelUpdate();
+        }
     }
 
     @Emit()
@@ -116,7 +145,8 @@ export default class SubNav extends Vue {
 
 <style scoped lang="scss">
 header.navbar {
-    min-height: 2.25rem;
+    height: 2.5rem;
+    min-height: 2.5rem;
     flex: 0 0 auto;
     .navbar-item {
         padding: 0.25rem 0.75rem;

@@ -18,7 +18,9 @@ export default {
     },
     async deleteMap(context: ActionContext<IState, IState>, map: IMap) {
         if (map.id) {
-            context.commit('changeMapName', '');
+            if (context.state.currentMapName === map.name) {
+                context.commit('changeMapName', '');
+            }
             await Service.delete(`/maps/${map.id}`);
             await context.dispatch('loadMaps');
         }

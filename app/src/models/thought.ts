@@ -113,6 +113,7 @@ export default class Thought {
             x: centerPoint.x - mainPoint.x,
             y: centerPoint.y - mainPoint.y,
             size: this.size,
+            color: this.ellipse.stroke!,
             text: this.text.text || '',
             connections: this.connections.map((connection) => connection.getOtherId(this.id))
         }

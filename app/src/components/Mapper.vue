@@ -177,6 +177,7 @@ export default class Application extends Vue {
                 x: center.left + thought.x,
                 y: center.top + thought.y,
                 id: thought.id,
+                color: thought.color,
                 size: thought.size,
                 text: thought.text
             });

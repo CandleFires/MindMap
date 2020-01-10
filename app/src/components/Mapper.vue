@@ -1,6 +1,6 @@
 <template>
     <div class="mapper-wrapper">
-        <SubNav :saving="saving" @save="save" @delete-thought="deleteThought" @save-as-image="saveAsImage" @share="share" @zoomin="changeZoom(true)" @zoomout="changeZoom(false)"></SubNav>
+        <SubNav :saving="saving" name="name" @update-name="updateName" @save="save" @delete-thought="deleteThought" @save-as-image="saveAsImage" @share="share" @zoomin="changeZoom(true)" @zoomout="changeZoom(false)"></SubNav>
         <section ref="mapper" class="mapper">
             <canvas ref="canvas" />
         </section>
@@ -20,6 +20,7 @@ import ColorPicker from '../models/colorPicker';
 import ThoughtSize from '../enums/thoughtSize';
 import IMap from '../interfaces/IMap';
 import {saveAs} from "file-saver";
+import IDictionary from "../interfaces/IDictionary";
 
 @Component({
     components: {
@@ -39,6 +40,9 @@ export default class Application extends Vue {
     private mapName!: string;
     @State((state: IState) => state.unsavedChanges)
     private unsavedChanges!: string;
+    @State((state: IState) => state.savedMaps)
+    private savedMaps!: IDictionary<IMap>;
+
     @Getter
     private currentMap!: IMap;
     @Mutation
@@ -79,6 +83,13 @@ export default class Application extends Vue {
         await this.saveMap(serializedMap);
         this.isSaved();
 
+        this.saving = false;
+    }
+
+    private updateName(newName: string) {
+        this.saving = true;
+        console.log('New name', newName);
+        // TODO rewriting this new name to the currently open map
         this.saving = false;
     }
 

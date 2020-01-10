@@ -3,9 +3,21 @@
         <div class="navbar-menu">
             <div class="navbar-start">
                 <div class="navbar-item">
-                    <span v-if="mapName">{{ mapName }}</span>
-                    <span v-else><em>New Map</em></span>
-                    <span v-if="unsavedChanges">*</span>
+                    <div v-show = "this.nameEdit === false" class="navbar-item">
+                        <span @click = "updateEdit" v-if="mapName">{{ mapName }}</span>
+                        <span @click = "updateEdit" v-else><em>New Map</em></span>
+                        <span v-if="unsavedChanges">*</span>
+                    </div>
+                </div>
+                <div class="field has-addons" v-show = "this.nameEdit == true">
+                    <div class="control">
+                        <input ref="name" class="input" type="text" placeholder="Enter New Name">
+                    </div>
+                        <div class="control">
+                        <a class="button is-info" @click="updateName">
+                            Save
+                        </a>
+                    </div>
                 </div>
             </div>
             <div class="navbar-end">
@@ -68,12 +80,25 @@ export default class SubNav extends Vue {
     private mapName!: string;
     @State((state: IState) => state.unsavedChanges)
     private unsavedChanges!: string;
+    private nameEdit: boolean = false;
 
     @Emit()
     private share() {}
 
     @Emit()
+    private updateEdit() {
+        this.nameEdit = true;
+    }
+
+    @Emit()
     private save() {}
+
+    @Emit()
+    private updateName() {
+        this.nameEdit = false;
+        const name = (this.$refs.name as HTMLInputElement).value;
+        return name;
+    }
 
     @Emit()
     private deleteThought() {}

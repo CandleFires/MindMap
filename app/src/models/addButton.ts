@@ -8,7 +8,9 @@ export default class AddButton {
     private picker: fabric.Group;
     private button: fabric.Group;
     private hoveredThought: Thought | null = null;
-
+    private buttonPressed: boolean = false;
+    private pressedThought: Thought | null = null;
+    private connectionLine: fabric.Line | null = null;
     private readonly CLOSE_THRESHOLD: number = 250;
     private readonly SHOW_THRESHOLD: number = 30;
 
@@ -61,7 +63,8 @@ export default class AddButton {
 
         this.canvas.add(this.button);
         this.canvas.on('mouse:move', this.changeButtonPosition);
-        this.button.on('mousedown', this.createThought);
+        this.canvas.on('mouse:up', this.handleMouseUp);
+        this.button.on('mousedown', this.handleMouseDown);
     }
 
     public getButton = () => this.button;
@@ -71,6 +74,15 @@ export default class AddButton {
             this.hide();
 
             return;
+        }
+
+        if (this.connectionLine) {
+            this.connectionLine.set({
+                x2: event.absolutePointer!.x,
+                y2: event.absolutePointer!.y
+            });
+            this.connectionLine.setCoords();
+            this.canvas.renderAll();
         }
 
         let closest: any = null;
@@ -136,6 +148,57 @@ export default class AddButton {
             this.thoughts.push(newThought);
             this.canvas.add(newThought.getGroup());
             this.hoveredThought.connectTo(newThought);
+        }
+    }
+
+    private handleMouseDown = (event: fabric.IEvent) => {
+        this.buttonPressed = true;
+        this.pressedThought = this.hoveredThought;
+        this.connectionLine = new fabric.Line([this.hoveredThought?.getGroup().left!, this.hoveredThought?.getGroup().top!, event.absolutePointer!.x, event.absolutePointer!.y], {
+            stroke: 'gray',
+            strokeWidth: 3,
+            selectable: false,
+            hasControls: false,
+            hasBorders: false,
+            evented: false,
+            centeredRotation: false,
+            centeredScaling: false,
+            name: 'temp_connection',
+            hoverCursor: 'default'
+        });
+        this.canvas.sendToBack(this.connectionLine);
+        this.canvas.renderAll();
+    }
+    
+    private handleMouseUp = (event: fabric.IEvent) => {
+        if (this.buttonPressed) {
+            this.buttonPressed = false;
+            if (event.target === this.button && this.pressedThought === this.hoveredThought) {
+                this.createThought(event);
+                if (this.connectionLine) {
+                    this.canvas.remove(this.connectionLine);
+                    this.connectionLine = null;
+                }
+            } else if (event.target) {
+                let targetThought: Thought | undefined;
+                if (event.target === this.button) {
+                    targetThought = this.hoveredThought!;
+                } else {
+                    targetThought = this.thoughts.find((thought) => thought.getGroup() === event.target);
+                }
+
+                if (targetThought && targetThought !== this.pressedThought && !targetThought?.connections.find((connection) => connection.contains(this.pressedThought!))) {
+                    this.pressedThought?.connectTo(targetThought);
+                }
+
+                if (this.connectionLine) {
+                    this.canvas.remove(this.connectionLine);
+                    this.connectionLine = null;
+                }
+            } else if (this.connectionLine) {
+                this.canvas.remove(this.connectionLine);
+                this.connectionLine = null;
+            }
         }
     }
 }

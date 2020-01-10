@@ -36,6 +36,8 @@ export default class Connection {
         return this.thought1.getId() === id ? this.thought2.getId() : this.thought1.getId();
     }
 
+    public contains = (thought: Thought) =>  this.thought1 === thought || this.thought2 === thought;
+
     public destroy = () => {
         this.thought1.offThoughtMove(this.changeFirstPosition);
         this.thought2.offThoughtMove(this.changeSecondPosition);

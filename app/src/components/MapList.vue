@@ -46,6 +46,11 @@
                         </a>
                     </td>
                 </tr>
+                <tr v-if="Object.entries(savedMaps).length === 0">
+                    <td colspan="2">
+                        <em>No saved maps</em>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </section>
@@ -105,8 +110,12 @@ section {
         margin-bottom: 0;
     }
     table.table {
+        max-width: 1200px;
+        margin: auto;
         tbody tr {
             border: 1px solid #dbdbdb;
+            border-left: 0;
+            border-right: 0;
             td, th {
                 border: 0;
                 height: 46px;

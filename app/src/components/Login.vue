@@ -24,12 +24,12 @@
                     </p>
                 </p>
             </div>
-            <div class="field is-grouped is-grouped-centered">
-                <p class="control is-centered">
-                    <button ref="signin" type="submit" class="button is-success">Sign In</button>
-                </p>
+                <div class="field is-grouped is-grouped-right">
+                    <p class="control">
+                        <button ref="signin" type="submit" class="button is-primary">Sign In</button>
+                    </p>
+                </div>
             </div>
-        </div>
     </section>
 </template>
 

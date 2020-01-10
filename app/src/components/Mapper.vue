@@ -194,7 +194,6 @@ export default class Application extends Vue {
         }
         if (!this.unsavedChanges) {
             this.isUnsaved();
-            console.warn(this.unsavedChanges);
         }
     }
 

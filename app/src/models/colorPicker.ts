@@ -6,6 +6,7 @@ export default class ColorPicker {
     private thoughts: Array<Thought>;
     private picker: fabric.Group;
     private colorButtons: Array<fabric.Circle>;
+    private thoughtMoveCallback?: () => void;
     private selectedThought: Thought | undefined;
     private clearTimeout: number | undefined;
 
@@ -79,19 +80,32 @@ export default class ColorPicker {
             targetThought = this.thoughts.find((thought) => thought.getGroup() === event.target);
         }
         if (targetThought) {
-            this.selectedThought = targetThought;
-            const boundingRect = event.target!.getBoundingRect();
-            this.picker.left = boundingRect.left + boundingRect.width;
-            this.picker.top = event.target!.getCenterPoint().y;
-            this.colorButtons.forEach((colorButton) => colorButton.hoverCursor = 'pointer');
-            this.picker.opacity = 1;
-            this.canvas.bringToFront(this.picker);
+            if (this.selectedThought !== targetThought) {
+                this.selectedThought = targetThought;
+                this.colorButtons.forEach((colorButton) => colorButton.hoverCursor = 'pointer');
+                this.picker.opacity = 1;
+                this.canvas.bringToFront(this.picker);
+                this.movePickerTo(targetThought);
+                this.thoughtMoveCallback = this.movePickerTo.bind(this, targetThought);
+                targetThought.onThoughtMove(this.thoughtMoveCallback);
+            }
         } else {
+            if (this.thoughtMoveCallback) {
+                this.thoughts.forEach((thought) => thought.offThoughtMove(this.thoughtMoveCallback!));
+                delete this.thoughtMoveCallback;
+            }
             this.picker.opacity = 0;
             this.selectedThought = undefined;
             this.colorButtons.forEach((colorButton) => colorButton.hoverCursor = 'default');
+            this.picker.setCoords();
+            this.canvas.renderAll();
         }
+    }
 
+    private movePickerTo = (thought: Thought) => {
+        const thoughtObject = thought.getGroup();
+        this.picker.left = thoughtObject.left! + (thoughtObject.width! / 2);
+        this.picker.top = thoughtObject.top;
         this.picker.setCoords();
         this.canvas.renderAll();
     }

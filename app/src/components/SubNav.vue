@@ -35,41 +35,77 @@
             <div class="navbar-end">
                 <div class="navbar-item">
                     <div class="buttons are-small has-addons">
-                        <a class="button" @click="zoomin">
+                        <a class="button is-hidden-desktop" @click="zoomin">
                             <span class="icon is-small">
                                 <i class="fas fa-search-plus"></i>
                             </span>
                         </a>
-                        <a class="button" @click="zoomout">
+                        <a class="button is-hidden-touch" @click="zoomin">
+                            <span class="icon is-small">
+                                <i class="fas fa-search-plus"></i>
+                            </span>
+                            <span>Zoom In</span>
+                        </a>
+                        <a class="button is-hidden-desktop" @click="zoomout">
                             <span class="icon is-small">
                                 <i class="fas fa-search-minus"></i>
                             </span>
                         </a>
-                    </div>
-                    <div class="buttons are-small">
-                        <a class="button is-success" :class="{ 'is-loading': saving }" @click="save">
+                        <a class="button is-hidden-touch" @click="zoomout">
                             <span class="icon is-small">
-                                <i class="fas fa-save"></i>
+                                <i class="fas fa-search-minus"></i>
                             </span>
-                            <span>Save</span>
+                            <span>Zoom Out</span>
                         </a>
-                        <a class="button is-info" @click="share">
+                    </div>
+                    <div class="buttons are-small has-addons">
+                        <a class="button is-danger is-hidden-desktop" @click="deleteThought">
+                            <span class="icon is-small">
+                                <i class="fas fa-trash"></i>
+                            </span>
+                        </a>
+                        <a class="button is-danger is-hidden-touch" @click="deleteThought">
+                            <span class="icon is-small">
+                                <i class="fas fa-trash"></i>
+                            </span>
+                            <span>Delete</span>
+                        </a>
+                    </div>
+                    <div class="buttons are-small has-addons">
+                        <a class="button is-info is-hidden-desktop" @click="share">
+                            <span class="icon is-small">
+                                <i class="fas fa-share-square"></i>
+                            </span>
+                        </a>
+                        <a class="button is-info is-hidden-touch" @click="share">
                             <span class="icon is-small">
                                 <i class="fas fa-share-square"></i>
                             </span>
                             <span>Share</span>
                         </a>
-                        <a class="button is-info" @click="saveAsImage">
+                        <a class="button is-info is-hidden-desktop" @click="saveAsImage">
                             <span class="icon is-small">
                                 <i class="fas fa-image"></i>
                             </span>
-                            <span>Save As Image</span>
                         </a>
-                        <a ref="share" class="button is-danger" @click="deleteThought">
+                        <a class="button is-info is-hidden-touch" @click="saveAsImage">
                             <span class="icon is-small">
-                                <i class="fas fa-ban"></i>
+                                <i class="fas fa-image"></i>
                             </span>
-                            <span>Delete</span>
+                            <span>Save Image</span>
+                        </a>
+                    </div>
+                    <div class="buttons are-small">
+                        <a class="button is-success is-hidden-desktop" :class="{ 'is-loading': saving }" @click="save">
+                            <span class="icon is-small">
+                                <i class="fas fa-save"></i>
+                            </span>
+                        </a>
+                        <a class="button is-success is-hidden-touch" :class="{ 'is-loading': saving }" @click="save">
+                            <span class="icon is-small">
+                                <i class="fas fa-save"></i>
+                            </span>
+                            <span>Save</span>
                         </a>
                     </div>
                 </div>
@@ -153,6 +189,25 @@ header.navbar {
         .buttons.has-addons {
             margin-bottom: -0.5rem;
             margin-right: 0.5rem;
+        }
+    }
+    .navbar-menu {
+        display: flex;
+        align-items: stretch;
+        flex-grow: 1;
+        flex-shrink: 0;
+        padding: 0;
+        .navbar-start {
+            justify-content: flex-start;
+            flex: 0 1 auto;
+        }
+        .navbar-end {
+            justify-content: flex-end;
+            flex: 1 0 auto;
+            display: flex;
+        }
+        .navbar-item {
+            display: flex;
         }
     }
 }

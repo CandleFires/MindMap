@@ -70,7 +70,7 @@ export default class AddButton {
     public getButton = () => this.button;
 
     private changeButtonPosition = (event: fabric.IEvent) => {
-        if (this.picker.containsPoint(event.absolutePointer!)) {
+        if (this.picker.containsPoint(event.absolutePointer!, undefined, true)) {
             this.hide();
 
             return;

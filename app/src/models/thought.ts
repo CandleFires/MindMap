@@ -15,6 +15,8 @@ export default class Thought {
     private group: fabric.Group;
     private size: ThoughtSize;
     private moveCallbacks: Array<() => void>;
+    private pressedTimeout?: number;
+    private pressed = false;
     private editing: boolean = false;
 
     constructor(canvas: fabric.Canvas, options: IThoughtOptions) {
@@ -136,7 +138,7 @@ export default class Thought {
             subTargetCheck: true
         });
 
-        group.on('mousedblclick', this.editThoughtText);
+        group.on('mousedown', this.handleMouseDown);
         group.on('moving', this.thoughtMoved);
 
         return group;
@@ -189,6 +191,17 @@ export default class Thought {
                 return { width: 100, height: 50, fontSize: 10 };
             default:
                 return { width: 0, height: 0, fontSize: 0 };
+        }
+    }
+
+    private handleMouseDown = (event: fabric.IEvent) => {
+        if (!this.pressed) {
+            this.pressed = true;
+            this.pressedTimeout = setTimeout(() => this.pressed = false, 300);
+        } else {
+            this.pressed = false;
+            clearTimeout(this.pressedTimeout);
+            this.editThoughtText();
         }
     }
 

@@ -211,4 +211,10 @@ header.navbar {
         }
     }
 }
+.button.is-info.is-hidden-touch,
+.button.is-success.is-hidden-touch,
+.button.is-danger.is-hidden-touch,
+{
+    color: black;
+}
 </style>

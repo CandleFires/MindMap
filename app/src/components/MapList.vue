@@ -132,4 +132,13 @@ section {
         }
     }
 }
+.button.is-primary,
+.button.is-info,
+.button.is-danger,
+.button.is-primary:hover,
+.button.is-info:hover,
+.button.is-danger:hover,
+{
+    color: black;
+}
 </style>

@@ -104,5 +104,8 @@ nav {
     .navbar-item.active {
         background-color: darken($color: $primary, $amount: 10);
     }
+    .logged-in.is-hidden-touch {
+        color: black;
+    }
 }
 </style>

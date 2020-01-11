@@ -8,7 +8,7 @@ class APIService {
         if (PRODUCTION) {
             this.serviceURL = window.location.href;
         } else {
-            this.serviceURL = 'http://localhost:3000/';
+            this.serviceURL = 'http://192.168.0.130:3000/';
         }
     }
 

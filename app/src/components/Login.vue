@@ -103,6 +103,7 @@ export default class Login extends Vue {
 }
 .login {
     width: 400px;
+    max-width: 90vw;
     padding: 10px 15px;
     border: 1px solid $border-color;
     background-color: $background-highlight;

@@ -78,6 +78,7 @@ export default class MainNav extends Vue {
 
 <style scoped lang="scss">
 @import '../styles/variables.scss';
+@import '~bulma/sass/utilities/all';
 
 nav {
     flex: 0 0 auto;
@@ -103,6 +104,18 @@ nav {
     }
     .navbar-item.active {
         background-color: darken($color: $primary, $amount: 10);
+    }
+}
+
+@include touch {
+    #navbar-content {
+        background-color: lighten($color: $primary, $amount: 10);
+        a.navbar-item {
+            color: $text-light;
+            &:hover {
+                background-color: darken($color: $primary, $amount: 5);
+            }
+        }
     }
 }
 </style>

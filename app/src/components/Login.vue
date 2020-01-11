@@ -107,7 +107,4 @@ export default class Login extends Vue {
     border: 1px solid $border-color;
     background-color: $background-highlight;
 }
-.button.is-primary, .button.is-primary:hover {
-    color: black;
-}
 </style>

@@ -4,6 +4,7 @@ import Service from '../services/apiService';
 import IMap from '../interfaces/IMap';
 import Page from '../enums/page';
 import { showPopup } from '../utility';
+import store from '.';
 
 export default {
     async loadMaps (context: ActionContext<IState, IState>) {
@@ -15,6 +16,7 @@ export default {
         await Service.post('/maps', {
             data: map
         });
+        await context.dispatch('loadMaps');
     },
     async deleteMap(context: ActionContext<IState, IState>, map: IMap) {
         if (map.id) {
@@ -40,5 +42,10 @@ export default {
         }
 
         context.commit('changePage', page);
+    },
+    async logout(context: ActionContext<IState, IState>) {
+        store.commit('logout');
+        store.commit('changePage', Page.MapList);
+        store.commit('setMaps', []);
     }
 };

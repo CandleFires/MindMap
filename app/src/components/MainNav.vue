@@ -48,7 +48,7 @@ export default class MainNav extends Vue {
     public user!: string;
     @State((state: IState) => state.page)
     public page!: Page;
-    @Mutation('logout')
+    @Action('logout')
     private logout!: () => void;
     @Action('changePage')
     private changePage!: (page: Page) => void;

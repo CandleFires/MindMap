@@ -73,15 +73,14 @@ export default class Application extends Vue {
 
     private async save() {
         this.saving = true;
-        let oldName;
+        let existingMap;
         if (this.changedName) {
-            oldName = this.mapName;
+            existingMap = this.savedMaps[this.mapName]
             this.changeMapName(this.changedName);
         } else if (!this.mapName) {
             const newName = window.prompt('New Mind Map Name');
             this.changeMapName(newName || 'New Mind Map');
         }
-        const existingMap = this.savedMaps[this.mapName];
         const serializedMap: IMap = {
             id: existingMap ? existingMap.id : undefined,
             name: this.mapName,
@@ -89,9 +88,6 @@ export default class Application extends Vue {
         };
 
         await this.saveMap(serializedMap);
-        if (oldName) {
-            await this.deleteMap(this.savedMaps[oldName]);
-        }
         this.changedName = null;
         this.isSaved();
 

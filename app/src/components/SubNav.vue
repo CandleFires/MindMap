@@ -35,7 +35,7 @@
             <div class="navbar-end">
                 <div class="navbar-item">
                     <div class="buttons are-small has-addons">
-                        <a class="button is-hidden-desktop" @click="zoomin">
+                        <a class="button is-hidden-desktop" title="Zoom In" @click="zoomin">
                             <span class="icon is-small">
                                 <i class="fas fa-search-plus"></i>
                             </span>
@@ -46,7 +46,7 @@
                             </span>
                             <span>Zoom In</span>
                         </a>
-                        <a class="button is-hidden-desktop" @click="zoomout">
+                        <a class="button is-hidden-desktop" title="Zoom Out" @click="zoomout">
                             <span class="icon is-small">
                                 <i class="fas fa-search-minus"></i>
                             </span>
@@ -59,7 +59,7 @@
                         </a>
                     </div>
                     <div class="buttons are-small has-addons">
-                        <a class="button is-danger is-hidden-desktop" @click="deleteThought">
+                        <a class="button is-danger is-hidden-desktop" title="Delete Thought" @click="deleteThought">
                             <span class="icon is-small">
                                 <i class="fas fa-trash"></i>
                             </span>
@@ -68,11 +68,11 @@
                             <span class="icon is-small">
                                 <i class="fas fa-trash"></i>
                             </span>
-                            <span>Delete</span>
+                            <span>Delete Thought</span>
                         </a>
                     </div>
                     <div class="buttons are-small has-addons">
-                        <a class="button is-info is-hidden-desktop" @click="share">
+                        <a class="button is-info is-hidden-desktop" title="Share" @click="share">
                             <span class="icon is-small">
                                 <i class="fas fa-share-square"></i>
                             </span>
@@ -83,7 +83,7 @@
                             </span>
                             <span>Share</span>
                         </a>
-                        <a class="button is-info is-hidden-desktop" @click="saveAsImage">
+                        <a class="button is-info is-hidden-desktop" title="Save Image" @click="saveAsImage">
                             <span class="icon is-small">
                                 <i class="fas fa-image"></i>
                             </span>
@@ -96,7 +96,7 @@
                         </a>
                     </div>
                     <div class="buttons are-small">
-                        <a class="button is-success is-hidden-desktop" :class="{ 'is-loading': saving }" @click="save">
+                        <a class="button is-success is-hidden-desktop" title="Save" :class="{ 'is-loading': saving }" @click="save">
                             <span class="icon is-small">
                                 <i class="fas fa-save"></i>
                             </span>

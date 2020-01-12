@@ -125,10 +125,14 @@ export default class Application extends Vue {
     }
 
     private saveAsImage() {
-        const image = this.canvas.toDataURL({
-            format: 'png'
-        });
-        saveAs(image, `${this.mapName}.png`);
+        this.canvas.discardActiveObject();
+        this.canvas.renderAll();
+        setTimeout(() => {
+            const image = this.canvas.toDataURL({
+                format: 'png'
+            });
+            saveAs(image, `${this.mapName}.png`);
+        }, 20);
     }
 
     private changeZoom(zoomIn: boolean) {

@@ -1,7 +1,7 @@
 <template>
     <nav class="navbar is-primary" role="navigation">
         <div class="navbar-brand">
-            <span class="navbar-item">
+            <span ref="logo" class="navbar-item logo">
                 <img src="images/CandleFire.png" alt="CandleFire">
             </span>
             <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbar-content">
@@ -58,12 +58,14 @@ export default class MainNav extends Vue {
         (this.$refs.logout as HTMLElement).addEventListener('click', this.logout);
         (this.$refs.create as HTMLElement).addEventListener('click', this.switchToCreate);
         (this.$refs.maps as HTMLElement).addEventListener('click', this.switchToMyMaps);
+        (this.$refs.logo as HTMLElement).addEventListener('click', this.switchToMyMaps);
     }
 
     private beforeDestroyed() {
         (this.$refs.logout as HTMLElement).removeEventListener('click', this.logout);
         (this.$refs.create as HTMLElement).removeEventListener('click', this.switchToCreate);
         (this.$refs.maps as HTMLElement).removeEventListener('click', this.switchToMyMaps);
+        (this.$refs.logo as HTMLElement).addEventListener('logo', this.switchToMyMaps);
     }
 
     private switchToMyMaps() {
@@ -82,15 +84,18 @@ export default class MainNav extends Vue {
 
 nav {
     flex: 0 0 auto;
-    img {
-        -webkit-filter: drop-shadow(1px 1px 0 $text-color)
-                drop-shadow(-1px 1px 0 $text-color)
-                drop-shadow(1px -1px 0 $text-color)
-                drop-shadow(-1px -1px 0 $text-color);
-        filter: drop-shadow(1px 1px 0 $text-color)
-                drop-shadow(-1px 1px 0 $text-color)
-                drop-shadow(1px -1px 0 $text-color)
-                drop-shadow(-1px -1px 0 $text-color);
+    .logo {
+        cursor: pointer;
+        img {
+            -webkit-filter: drop-shadow(1px 1px 0 $text-color)
+                    drop-shadow(-1px 1px 0 $text-color)
+                    drop-shadow(1px -1px 0 $text-color)
+                    drop-shadow(-1px -1px 0 $text-color);
+            filter: drop-shadow(1px 1px 0 $text-color)
+                    drop-shadow(-1px 1px 0 $text-color)
+                    drop-shadow(1px -1px 0 $text-color)
+                    drop-shadow(-1px -1px 0 $text-color);
+        }
     }
     .logged-in {
         margin-right: 1em;

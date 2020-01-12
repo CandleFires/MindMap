@@ -6,7 +6,7 @@ class APIService {
 
     constructor() {
         if (PRODUCTION) {
-            this.serviceURL = window.location.href;
+            this.serviceURL = window.location.origin;
         } else {
             this.serviceURL = `http://${window.location.hostname}:3000/`;
         }

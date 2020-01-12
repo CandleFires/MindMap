@@ -38,7 +38,7 @@
                             </span>
                             <span>Share</span>
                         </a>
-                        <a ref="share" class="button is-danger" @click="deleteMap(map)">
+                        <a ref="share" class="button is-danger" @click="handleDelete(map)">
                             <span class="icon is-small">
                                 <i class="fas fa-ban"></i>
                             </span>
@@ -66,6 +66,7 @@ import IMap from '../interfaces/IMap';
 import Page from '../enums/page';
 import Service from '../services/apiService';
 import { saveAs } from 'file-saver';
+import { showPopup } from '../utility';
 
 @Component
 export default class MapList extends Vue {
@@ -98,6 +99,20 @@ export default class MapList extends Vue {
     private newMap(map: IMap) {
         this.changeMapName('');
         this.changePage(Page.Mapper);
+    }
+
+    private async handleDelete(map: IMap) {
+        try {
+            await showPopup({
+                title: 'Delete Map',
+                text: `Are you sure you want to delete the map ${map.name}?`,
+                confirmationText: 'Yes',
+                cancellationText: 'No'
+            });
+            this.deleteMap(map);
+        } catch {
+            return;
+        }
     }
 }
 </script>

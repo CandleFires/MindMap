@@ -11,7 +11,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { State, Mutation, Getter, Action } from 'vuex-class';
 import { fabric } from 'fabric';
-import { setDocumentTitle } from '../utility';
+import { setDocumentTitle, showPopup } from '../utility';
 import SubNav from './SubNav.vue';
 import IState from '../interfaces/IState';
 import Thought from '../models/thought';
@@ -101,15 +101,25 @@ export default class Application extends Vue {
         this.isUnsaved();
     }
 
-    private deleteThought() {
+    private async deleteThought() {
         const activeObject = this.canvas.getActiveObject();
         if (activeObject && activeObject.type === 'group') {
             const thought = this.thoughts.find((th) => th.getGroup() === activeObject);
             if (thought && thought !== this.mainThought) {
-                this.thoughts.splice(this.thoughts.indexOf(thought), 1);
-                thought.destroy();
-                this.canvas.remove(activeObject);
-                this.canvas.discardActiveObject().renderAll();
+                try {
+                    await showPopup({
+                        title: 'Delete Thought',
+                        text: `Are you sure you want to delete the selected thought?`,
+                        confirmationText: 'Yes',
+                        cancellationText: 'No'
+                    });
+                    this.thoughts.splice(this.thoughts.indexOf(thought), 1);
+                    thought.destroy();
+                    this.canvas.remove(activeObject);
+                    this.canvas.discardActiveObject().renderAll();
+                } catch {
+                    return;
+                }
             }
         }
     }

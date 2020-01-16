@@ -11,7 +11,13 @@
                 <tr>
                     <th></th>
                     <th class="buttons are-small is-right">
-                        <a ref="save" class="button is-primary" @click="newMap">
+                        <a class="button is-primary" @click="importMapClicked">
+                            <span class="icon is-small">
+                                <i class="fas fa-upload"></i>
+                            </span>
+                            <span>Import Map</span>
+                        </a>
+                        <a class="button is-primary" @click="newMap">
                             <span class="icon is-small">
                                 <i class="fas fa-plus"></i>
                             </span>
@@ -26,19 +32,19 @@
                         {{ map.name }}
                     </td>
                     <td class="buttons are-small is-right">
-                        <a ref="save" class="button is-primary" @click="loadMap(map)">
+                        <a class="button is-primary" @click="loadMap(map)">
                             <span class="icon is-small">
                                 <i class="fas fa-upload"></i>
                             </span>
                             <span>Load</span>
                         </a>
-                        <a ref="share" class="button is-info" @click="shareMap(map)">
+                        <a class="button is-info" @click="shareMap(map)">
                             <span class="icon is-small">
                                 <i class="fas fa-share-square"></i>
                             </span>
                             <span>Share</span>
                         </a>
-                        <a ref="share" class="button is-danger" @click="handleDelete(map)">
+                        <a class="button is-danger" @click="handleDelete(map)">
                             <span class="icon is-small">
                                 <i class="fas fa-ban"></i>
                             </span>
@@ -53,6 +59,7 @@
                 </tr>
             </tbody>
         </table>
+        <input ref="importer" type="file" name="importer" id="importer">
     </section>
 </template>
 
@@ -66,7 +73,7 @@ import IMap from '../interfaces/IMap';
 import Page from '../enums/page';
 import Service from '../services/apiService';
 import { saveAs } from 'file-saver';
-import { showPopup } from '../utility';
+import { showPopup, IMPORT_MAP_NAME } from '../utility';
 
 @Component
 export default class MapList extends Vue {
@@ -76,6 +83,8 @@ export default class MapList extends Vue {
     private deleteMap!: (map: IMap) => void;
     @Mutation
     private changeMapName!: (mapName: string) => void;
+    @Mutation
+    private addImportMap!: (map: IMap) => void;
     @Action
     private changePage!: (page: Page) => void;
     @Action
@@ -83,6 +92,7 @@ export default class MapList extends Vue {
 
     private mounted() {
         this.loadMaps();
+        (this.$refs.importer as HTMLInputElement).addEventListener('change', this.importFileChanged);
     }
 
     private loadMap(map: IMap) {
@@ -98,6 +108,34 @@ export default class MapList extends Vue {
 
     private newMap(map: IMap) {
         this.changeMapName('');
+        this.changePage(Page.Mapper);
+    }
+
+    private importMapClicked() {
+        (this.$refs.importer as HTMLInputElement).click();
+    }
+
+    private importFileChanged() {
+        const file = (this.$refs.importer as HTMLInputElement).files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e: Event) => {
+                const contents = (e.target as any)?.result;
+                if (contents) {
+                    try {
+                        this.importMap(JSON.parse(contents));
+                    } catch (error) {
+                        console.error(error);
+                    }
+                }
+            };
+            reader.readAsText(file);
+        }
+    }
+
+    private importMap(map: IMap) {
+        this.addImportMap(map);
+        this.changeMapName(IMPORT_MAP_NAME);
         this.changePage(Page.Mapper);
     }
 
@@ -121,6 +159,9 @@ export default class MapList extends Vue {
 
 section {
     flex: 1 1 auto;
+    #importer {
+        display: none;
+    }
     .buttons .button {
         margin-bottom: 0;
     }

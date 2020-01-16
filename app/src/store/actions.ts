@@ -39,6 +39,10 @@ export default {
             } catch {
                 return;
             }
+            if (page !== Page.Mapper) {
+                context.commit('removeImportMap');
+                context.commit('changeMapName', '');
+            }
         }
 
         context.commit('changePage', page);

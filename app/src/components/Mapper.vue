@@ -11,7 +11,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { State, Mutation, Getter, Action } from 'vuex-class';
 import { fabric } from 'fabric';
-import { setDocumentTitle, showPopup } from '../utility';
+import { setDocumentTitle, showPopup, IMPORT_MAP_NAME } from '../utility';
 import SubNav from './SubNav.vue';
 import IState from '../interfaces/IState';
 import Thought from '../models/thought';
@@ -73,16 +73,19 @@ export default class Application extends Vue {
 
     private async save() {
         this.saving = true;
-        let existingMap;
+        const formerId = this.currentMap?.id;
         if (this.changedName) {
-            existingMap = this.savedMaps[this.mapName]
             this.changeMapName(this.changedName);
         } else if (!this.mapName) {
             const newName = window.prompt('New Mind Map Name');
             this.changeMapName(newName || 'New Mind Map');
         }
+        const namedId = this.currentMap?.id;
+        if (namedId) {
+            await this.deleteMap({ id: namedId, name: '',  thoughts: []});
+        }
         const serializedMap: IMap = {
-            id: existingMap ? existingMap.id : undefined,
+            id: formerId,
             name: this.mapName,
             thoughts: this.thoughts.map((thought) => thought.serialize(this.mainThought.getGroup().getCenterPoint()))
         };
@@ -126,7 +129,7 @@ export default class Application extends Vue {
 
     private share() {
         const serializedMap: IMap = {
-            name: this.mapName,
+            name: this.changedName || this.mapName || 'New Mind Map',
             thoughts: this.thoughts.map((thought) => thought.serialize(this.mainThought.getGroup().getCenterPoint()))
         };
         const json = JSON.stringify(serializedMap);
@@ -162,7 +165,12 @@ export default class Application extends Vue {
             setDocumentTitle('New Mind Map');
         } else {
             this.createMapFromSave(this.currentMap);
-            setDocumentTitle(this.mapName);
+            if (this.mapName === IMPORT_MAP_NAME) {
+                this.updateName(this.currentMap.name);
+                setDocumentTitle(this.changedName!);
+            } else {
+                setDocumentTitle(this.mapName);
+            }
         }
         const colorPicker = new ColorPicker(this.canvas, this.thoughts);
         const addButton = new AddButton(this.canvas, this.thoughts, colorPicker.getPicker());

@@ -4,6 +4,8 @@ import IPopup from './interfaces/IPopup';
 import store from './store';
 import IState from './interfaces/IState';
 
+export const IMPORT_MAP_NAME: string = "2f3b3158-1f40-4b0a-8cb0-ac7038301073";
+
 const lut: Array<string> = [];
 for (let i = 0; i < 256; i++) {
     lut[i] = (i < 16 ? '0' : '') + (i).toString(16);

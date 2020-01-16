@@ -1,6 +1,6 @@
 import IState from '../interfaces/IState';
 import Page from '../enums/page';
-import { setDocumentTitle, getUserFriendlyPageName } from '../utility';
+import { setDocumentTitle, getUserFriendlyPageName, IMPORT_MAP_NAME } from '../utility';
 import IMap from '../interfaces/IMap';
 import Vue from 'vue';
 import IPopup from '../interfaces/IPopup';
@@ -52,5 +52,11 @@ export default {
     },
     isSaved (state: IState) {
         state.unsavedChanges = false;
+    },
+    addImportMap (state: IState, map: IMap) {
+        Vue.set(state.savedMaps, IMPORT_MAP_NAME, map);
+    },
+    removeImportMap (state: IState) {
+        Vue.delete(state.savedMaps, IMPORT_MAP_NAME);
     }
 };
